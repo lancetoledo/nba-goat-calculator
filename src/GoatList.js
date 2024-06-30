@@ -100,7 +100,7 @@ const GoatList = () => {
 
   return (
     <div className="goat-list">
-      <h1>SQUADRON's GOAT List</h1>
+      <h1>⚔️ SQUADRON's GOAT List</h1>
       {Object.entries(tiers).map(([tier, players]) => 
         tier !== "Got Next Tier" ? (
           <Tier 
@@ -111,7 +111,7 @@ const GoatList = () => {
         ) : null
       )}
       <div className="next-tier">
-        <h2>SQUADRON's Got Next Tier</h2>
+        <h2>🔜 SQUADRON's Got Next Tier</h2>
         <div className="players">
           {tiers["Got Next Tier"].map((player) => (
             <PlayerIcon key={player["Player Name"]} player={player} rank={player.rank} />
