@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import playersData from './players.json';
 import { User } from 'lucide-react';
 
-const PlayerIcon = ({ rank }) => (
+const PlayerIcon = ({ player, rank }) => (
   <div className="player-icon">
-    <User size={40} />
+    {player.image ? (
+      <img src={player.image} alt={player["Player Name"]} width={60} height={60} />
+    ) : (
+      <User size={60} />
+    )}
     <div className="rank">{rank}</div>
   </div>
 );
@@ -12,33 +17,66 @@ const Tier = ({ tier, players }) => (
   <div className={`tier tier-${tier}`}>
     <div className="tier-label">{tier}</div>
     <div className="players">
-      {players.map((rank) => (
-        <PlayerIcon key={rank} rank={rank} />
+      {players.map((player) => (
+        <PlayerIcon key={player["Player Name"]} player={player} rank={player.rank} />
       ))}
     </div>
   </div>
 );
 
+const determineTier = (points) => {
+  if (points >= 6500000) return "Tier 1";
+  if (points >= 5100000) return "Tier 2";
+  if (points >= 3700000) return "Tier 3";
+  if (points >= 2300000) return "Tier 4";
+  if (points >= 900000) return "Tier 5";
+  return "Got Next Tier";
+};
+
 const GoatList = () => {
-  const tiers = [
-    { tier: 1, players: [1, 2, 3] },
-    { tier: 2, players: [4, 5, 6, 7, 8, 9, 10] },
-    { tier: 3, players: [11, 12, 13, 14, 15, 16, 17] },
-    { tier: 4, players: [18, 19, 20, 21, 22, 23, 24] },
-    { tier: 5, players: [25, 26, 27, 28, 29, 30, 31] },
-  ];
+  const rankedAndTieredPlayers = useMemo(() => {
+    const sorted = [...playersData.players].sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
+    return sorted.map((player, index) => ({
+      ...player,
+      rank: index + 1,
+      Tier: determineTier(player["Total GOAT Points"])
+    }));
+  }, []);
+
+  const tiers = useMemo(() => {
+    const tiersObj = {
+      "Tier 1": [],
+      "Tier 2": [],
+      "Tier 3": [],
+      "Tier 4": [],
+      "Tier 5": [],
+      "Got Next Tier": []
+    };
+
+    rankedAndTieredPlayers.forEach(player => {
+      tiersObj[player.Tier].push(player);
+    });
+
+    return tiersObj;
+  }, [rankedAndTieredPlayers]);
 
   return (
     <div className="goat-list">
       <h1>Logan Bradley's GOAT List</h1>
-      {tiers.map(({ tier, players }) => (
-        <Tier key={tier} tier={tier} players={players} />
-      ))}
+      {Object.entries(tiers).map(([tier, players]) => 
+        tier !== "Got Next Tier" ? (
+          <Tier 
+            key={tier} 
+            tier={tier.split(' ')[1]} 
+            players={players} 
+          />
+        ) : null
+      )}
       <div className="next-tier">
         <h2>Logan Bradley's Got Next Tier</h2>
         <div className="players">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <PlayerIcon key={i} rank="" />
+          {tiers["Got Next Tier"].map((player) => (
+            <PlayerIcon key={player["Player Name"]} player={player} rank={player.rank} />
           ))}
         </div>
       </div>
@@ -46,4 +84,4 @@ const GoatList = () => {
   );
 };
 
-export default GoatList
+export default GoatList;
