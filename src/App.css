@@ -69,36 +69,152 @@ body, html {
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
+  color: #ffffff;
 }
 
 .sidebar.open {
   left: 0;
 }
 
+.sidebar-content {
+  padding: 20px;
+}
+
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   background: none;
   border: none;
   color: white;
-  font-size: 24px;
   cursor: pointer;
 }
 
+
 .search-container {
-  margin-top: 20px;
-  padding-right: 10px; /* Added extra padding for the search bar */
+  margin: 20px 0;
 }
 
 .search-bar {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 5px;
   background-color: #1a2b5e;
   color: white;
+  font-size: 16px;
 }
+
+.sidebar h2, .sidebar h3 {
+  color: #ffffff;
+  border-bottom: 2px solid #2a3b6e;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
+
+
+/* .sidebar .player-info {
+  margin-bottom: 20px;
+} */
+
+.player-info p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.highlight {
+  color: #e63946;
+  font-weight: bold;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.category-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: #2a3b6e;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+  background-color: #3a4b7e;
+}
+
+.more-categories {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.achievements {
+  margin-top: 20px;
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.achievement-toggle,
+.achievement-action {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.achievement-input {
+  width: 60px;
+  padding: 5px;
+  margin-right: 10px;
+  background-color: #1a2b5e;
+  border: 1px solid #2a3b6e;
+  color: white;
+  border-radius: 3px;
+}
+
+.goat-points {
+  display: flex;
+  align-items: center;
+}
+
+.goat-points-input {
+  width: 60px;
+  padding: 5px;
+  margin: 0 10px;
+  background-color: #1a2b5e;
+  border: 1px solid #2a3b6e;
+  color: white;
+  border-radius: 3px;
+}
+
+.goat-points-action {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.no-achievements {
+  color: #a0a0a0;
+  font-style: italic;
+}
+
 
 h1, h2 {
   text-align: center;
