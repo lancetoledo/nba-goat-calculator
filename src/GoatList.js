@@ -101,7 +101,7 @@ const GoatList = ({ isSidebarOpen, toggleSidebar, onPlayerClick, selectedPlayer 
           ) : null
         )}
         <div className="next-tier">
-          <h2>SQUADRON's Got Next Tier</h2>
+          <h2>🔜 SQUADRON's Got Next Tier</h2>
           <div className="players">
             {tiers["Got Next Tier"].map((player) => (
               <PlayerIcon 
