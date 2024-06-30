@@ -60,16 +60,16 @@ body, html {
 .sidebar {
   position: fixed;
   top: 0;
-  left: -800px; /* Increased from -600px to -800px */
-  width: 800px; /* Increased from 600px to 800px */
+  left: -820px;
+  width: 820px;
   height: 100%;
   background-color: #0f1d3f;
   transition: left 0.3s ease-in-out;
   z-index: 1000;
-  padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
   color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar.open {
@@ -83,11 +83,13 @@ body, html {
 .close-btn {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 0px;
   background: none;
   border: none;
   color: white;
   cursor: pointer;
+  z-index: 1001;
+  font-size: 24px;
 }
 
 
@@ -105,21 +107,54 @@ body, html {
   font-size: 16px;
 }
 
-.sidebar h2, .sidebar h3 {
+.sidebar h3 {
   color: #ffffff;
   border-bottom: 2px solid #2a3b6e;
   padding-bottom: 10px;
-  margin-top: 20px;
+  margin-top: 30px;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+.player-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #2a3b6e;
+  padding-right: 20px;
+}
 
-/* .sidebar .player-info {
-  margin-bottom: 20px;
-} */
+.player-rank {
+  font-size: 64px;
+  font-weight: bold;
+  color: #e63946;
+  text-align: left;
+}
 
-.player-info p {
-  margin: 10px 0;
-  font-size: 18px;
+.sidebar-player-name {
+  font-size: 36px;
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  color: #ffffff;
+  display: block;
+  visibility: visible;
+  position: static;
+}
+
+.player-tier {
+  font-size: 40px;
+  font-weight: bold;
+  color: #e63946;
+  text-align: right;
 }
 
 .highlight {
@@ -129,8 +164,9 @@ body, html {
 
 .categories {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   margin: 20px 0;
 }
 
@@ -138,17 +174,23 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  padding: 15px;
   background-color: #2a3b6e;
   border: none;
   border-radius: 10px;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .category-button:hover {
   background-color: #3a4b7e;
+  transform: translateY(-2px);
+}
+
+.category-button span {
+  margin-top: 5px;
+  font-size: 14px;
 }
 
 .more-categories {
@@ -156,17 +198,26 @@ body, html {
   border: none;
   color: white;
   cursor: pointer;
+  font-size: 24px;
 }
 
 .achievements {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .achievement {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
-  font-size: 16px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  background-color: #1a2b5e;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.achievement:hover {
+  background-color: #2a3b6e;
 }
 
 .achievement-toggle,
@@ -175,32 +226,76 @@ body, html {
   border: none;
   color: white;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 15px;
+  font-size: 20px;
 }
 
 .achievement-input {
-  width: 60px;
-  padding: 5px;
-  margin-right: 10px;
-  background-color: #1a2b5e;
+  width: 80px;
+  padding: 8px;
+  margin-right: 15px;
+  background-color: #0f1d3f;
   border: 1px solid #2a3b6e;
   color: white;
-  border-radius: 3px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+.achievement-name {
+  flex-grow: 1;
+}
+
+.achievement-value {
+  margin-right: 15px;
+  font-weight: bold;
+  color: #e63946;
+}
+
+.no-achievements {
+  color: #a0a0a0;
+  font-style: italic;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.goat-points-container {
+  text-align: center;
+  margin-bottom: 40px;
+  background-color: #1a2b5e;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.goat-points-container h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .goat-points {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
+.goat-points .highlight {
+  font-size: 72px;
+  color: #e63946;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
 .goat-points-input {
-  width: 60px;
-  padding: 5px;
-  margin: 0 10px;
-  background-color: #1a2b5e;
+  width: 220px;
+  padding: 19px;
+  font-size: 36px;
+  margin-right: 10px;
+  background-color: #0f1d3f;
   border: 1px solid #2a3b6e;
   color: white;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .goat-points-action {
@@ -208,6 +303,7 @@ body, html {
   border: none;
   color: white;
   cursor: pointer;
+  font-size: 24px;
 }
 
 .no-achievements {
@@ -216,7 +312,7 @@ body, html {
 }
 
 
-h1, h2 {
+h1 {
   text-align: center;
   margin-bottom: 10px;
   font-size: 28px;
@@ -348,7 +444,7 @@ h1, h2 {
 
 @media (max-width: 1400px) { /* Increased from 1200px to account for wider sidebar */
   .App.sidebar-open .goat-list-container {
-    transform: translateX(calc(100% + 200px));
+    transform: translateX(calc(100% + 220px));
   }
 
   .goat-list {
@@ -366,6 +462,24 @@ h1, h2 {
   .sidebar {
     width: 100%;
     left: -100%;
+  }
+
+  .player-rank, .player-tier {
+    font-size: 40px; /* Reduce size on smaller screens */
+    width: 80px; /* Reduce width on smaller screens */
+  }
+
+  .player-name {
+    font-size: 28px; /* Reduce size on smaller screens */
+  }
+
+  .player-tier {
+    font-size: 32px;
+    width: 80px;
+  }
+  
+  .goat-points .highlight {
+    font-size: 56px;
   }
 
   .App.sidebar-open .goat-list-container {

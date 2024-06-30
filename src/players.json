@@ -5,7 +5,8 @@
       "Total GOAT Points": 9000000,
       "image": "https://clutchpoints.com/_next/image?url=https%3A%2F%2Fclutchpoints-profile-pics.s3.amazonaws.com%2Fheadshots%2Fjordanm.png&w=320&q=100",
       "Tier": "Tier 1",
-      "Achievements": {}
+      "Achievements": {},
+      "rank": 1
     },
     {
       "Player Name": "Lebron James",
@@ -268,9 +269,9 @@
     },
     {
       "Player Name": "Lance Toledo",
-      "Total GOAT Points": 5120,
+      "Total GOAT Points": 0,
       "image": "https://i.imgur.com/SmfxCec.png",
-      "Tier": "Tier 1",
+      "Tier": "Got Next Tier",
       "Achievements": {
         "Win Championship as rookie": false,
         "Rookie Finals MVP": false,
@@ -621,14 +622,16 @@
         "Win playoff game in OT": false,
         "Win All-Star Game": false,
         "Back-to-back 30+ point double-doubles": false
-      }
+      },
+      "rank": 39
     },
     {
       "Player Name": "Frankie Maravilla",
-      "Total GOAT Points": 5120,
+      "Total GOAT Points": 0,
       "image": "https://i.imgur.com/R5Errz2.png",
-      "Tier": "Tier 1",
-      "Achievements": {}
-    } 
+      "Tier": "Got Next Tier",
+      "Achievements": {},
+      "rank": 39
+    }
   ]
 }

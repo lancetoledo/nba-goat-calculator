@@ -3,7 +3,7 @@ import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X } from 'luc
 
 const CategoryButton = ({ icon: Icon, name }) => (
   <button className="category-button">
-    <Icon size={20} />
+    <Icon size={24} />
     <span>{name}</span>
   </button>
 );
@@ -21,9 +21,9 @@ const Achievement = ({ name, value, onToggle, onValueChange }) => {
     return (
       <div className="achievement">
         <button onClick={() => onToggle(name)} className="achievement-toggle">
-          {value ? <CheckSquare size={20} /> : <Square size={20} />}
+          {value ? <CheckSquare size={24} /> : <Square size={24} />}
         </button>
-        <span>{name}</span>
+        <span className="achievement-name">{name}</span>
       </div>
     );
   } else if (typeof value === 'number') {
@@ -37,15 +37,15 @@ const Achievement = ({ name, value, onToggle, onValueChange }) => {
               onChange={(e) => setEditValue(Number(e.target.value))}
               className="achievement-input"
             />
-            <Save size={20} onClick={handleSave} className="achievement-action" />
+            <Save size={24} onClick={handleSave} className="achievement-action" />
           </>
         ) : (
           <>
-            <span>{value}</span>
-            <Edit2 size={20} onClick={() => setIsEditing(true)} className="achievement-action" />
+            <span className="achievement-value">{value}</span>
+            <Edit2 size={24} onClick={() => setIsEditing(true)} className="achievement-action" />
           </>
         )}
-        <span>{name}</span>
+        <span className="achievement-name">{name}</span>
       </div>
     );
   }
@@ -91,38 +91,40 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
     });
   };
 
+  const displayTier = selectedPlayer?.Tier === "Got Next Tier" ? "NXT ⬆️" : selectedPlayer?.Tier;
+
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <button className="close-btn" onClick={onClose}><X size={24} /></button>
       <div className="sidebar-content">
-        <div className="player-info">
-          <h2>{selectedPlayer ? selectedPlayer["Player Name"] : "Player Name"}</h2>
-          {selectedPlayer && (
-            <>
-              <p>Rank: <span className="highlight">{selectedPlayer.rank}</span></p>
-              <p>Tier: <span className="highlight">{selectedPlayer.Tier}</span></p>
-              <p className="goat-points">
-                GOAT Points: 
-                {editingGoatPoints ? (
-                  <>
-                    <input 
-                      type="number" 
-                      value={goatPoints} 
-                      onChange={(e) => setGoatPoints(Number(e.target.value))}
-                      className="goat-points-input"
-                    />
-                    <Save size={20} onClick={handleGoatPointsUpdate} className="goat-points-action" />
-                  </>
-                ) : (
-                  <>
-                    <span className="highlight">{selectedPlayer["Total GOAT Points"]}</span>
-                    <Edit2 size={20} onClick={() => setEditingGoatPoints(true)} className="goat-points-action" />
-                  </>
-                )}
-              </p>
-            </>
-          )}
+        <div className="player-header">
+          <div className="player-rank">#{selectedPlayer?.rank}</div>
+          <h2 className="sidebar-player-name">{selectedPlayer ? selectedPlayer["Player Name"] : "Player Name"}</h2>
+          <div className="player-tier">{displayTier}</div>
         </div>
+        {selectedPlayer && (
+          <div className="goat-points-container">
+            <h3>G.O.A.T Points</h3>
+            <div className="goat-points">
+              {editingGoatPoints ? (
+                <>
+                  <input 
+                    type="number" 
+                    value={goatPoints} 
+                    onChange={(e) => setGoatPoints(Number(e.target.value))}
+                    className="goat-points-input"
+                  />
+                  <Save size={24} onClick={handleGoatPointsUpdate} className="goat-points-action" />
+                </>
+              ) : (
+                <>
+                  <span className="highlight">{selectedPlayer["Total GOAT Points"]}</span>
+                  <Edit2 size={24} onClick={() => setEditingGoatPoints(true)} className="goat-points-action" />
+                </>
+              )}
+            </div>
+          </div>
+        )}
         <div className="search-container">
           <input type="text" placeholder="Search players..." className="search-bar" />
         </div>
