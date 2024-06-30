@@ -3,15 +3,16 @@ import playersData from './players.json';
 import { User } from 'lucide-react';
 
 const PlayerIcon = ({ player, rank }) => (
-  <div className="player-icon">
-    {player.imageUrl ? (
-      <img src={player.imageUrl} alt={player["Player Name"]} width={100} height={100} />
-    ) : (
-      <User size={60} />
-    )}
-    <div className="rank">{rank}</div>
-  </div>
-);
+    <div className="player-icon">
+      {player.imageUrl ? (
+        <img src={player.imageUrl} alt={player["Player Name"]} width={80} height={80} />
+      ) : (
+        <User size={80} />
+      )}
+      <div className="rank">{rank}</div>
+      <div className="player-name">{player["Player Name"]}</div>
+    </div>
+  );
 
 const Tier = ({ tier, players }) => (
   <div className={`tier tier-${tier}`}>

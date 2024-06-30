@@ -72,13 +72,30 @@ h1, h2 {
 .player-icon {
   position: relative;
   background-color: #2c2c2c;
-  border-radius: 8px; /* Increased border radius */
-  padding: 8px; /* Increased padding */
-  width: 80px; /* Increased width */
-  height: 80px; /* Increased height */
+  border-radius: 8px;
+  padding: 8px;
+  width: 80px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.3s ease;
+  overflow: visible;
+}
+
+.player-icon:hover {
+  background-color: #e5e5e4;
+}
+
+.player-icon img,
+.player-icon svg {
+  transition: transform 0.3s ease;
+}
+
+.player-icon:hover img,
+.player-icon:hover svg {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .rank {
@@ -87,9 +104,32 @@ h1, h2 {
   right: 0;
   background-color: #e63946;
   color: white;
-  padding: 3px 7px; /* Increased padding */
-  font-size: 14px; /* Increased font size */
-  border-radius: 0 8px 0 8px; /* Adjusted border radius */
+  padding: 3px 7px;
+  font-size: 14px;
+  border-radius: 0 8px 0 8px;
+  z-index: 2;
+}
+
+.player-name {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(26, 43, 94, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease, bottom 0.3s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.player-icon:hover .player-name {
+  opacity: 1;
+  bottom: -25px;
 }
 
 .next-tier {
