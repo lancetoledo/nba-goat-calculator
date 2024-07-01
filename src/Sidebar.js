@@ -11,21 +11,42 @@ const CategoryButton = ({ icon: Icon, name, onClick }) => (
 
 const Achievement = ({ name, value, onToggle, onValueChange }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
+  const [editValue, setEditValue] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     setIsCompleted(typeof value === 'boolean' ? value : value > 0);
+    setEditValue(value.toString());
   }, [value]);
 
   const handleSave = () => {
-    onValueChange(name, editValue);
+    const newValue = editValue === '' ? 0 : parseInt(editValue, 10);
+    onValueChange(name, newValue);
     setIsEditing(false);
   };
 
   const handleToggle = () => {
     onToggle(name);
     setIsCompleted(!isCompleted);
+  };
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    if (inputValue === '' || /^\d+$/.test(inputValue)) {
+      setEditValue(inputValue);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    }
+  };
+
+  const startEditing = () => {
+    if (typeof value !== 'boolean') {
+      setIsEditing(true);
+    }
   };
 
   return (
@@ -37,24 +58,26 @@ const Achievement = ({ name, value, onToggle, onValueChange }) => {
       ) : (
         <>
           {isEditing ? (
-            <>
-              <input 
-                type="number" 
-                value={editValue} 
-                onChange={(e) => setEditValue(Number(e.target.value))}
-                className="achievement-input"
-              />
-              <Save size={24} onClick={handleSave} className="achievement-action" />
-            </>
+            <input 
+              type="text" 
+              value={editValue} 
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              className="achievement-input"
+              autoFocus
+            />
           ) : (
-            <>
-              <span className="achievement-value">{value}</span>
-              <Edit2 size={24} onClick={() => setIsEditing(true)} className="achievement-action" />
-            </>
+            <span className="achievement-value" onDoubleClick={startEditing}>{value}</span>
           )}
         </>
       )}
       <span className="achievement-name">{name}</span>
+      {typeof value !== 'boolean' && !isEditing && (
+        <Edit2 size={24} onClick={startEditing} className="achievement-action" />
+      )}
+      {isEditing && (
+        <Save size={24} onClick={handleSave} className="achievement-action" />
+      )}
     </div>
   );
 };
@@ -92,6 +115,7 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [playerRank, setPlayerRank] = useState(selectedPlayer?.rank || 0);
   const [playerTier, setPlayerTier] = useState(selectedPlayer?.Tier || "Got Next Tier");
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (selectedPlayer) {
@@ -113,6 +137,8 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
       return total;
     }, 0);
   };
+
+  
 
   const updatePlayerRankAndTier = (updatedPlayer) => {
     const sortedPlayers = [...allPlayers]
@@ -136,6 +162,12 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
     setPlayerRank(updatedPlayer.rank);
     setPlayerTier(updatedPlayer.Tier);
     setEditingGoatPoints(false);
+  };
+
+  const handleGoatPointsKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleGoatPointsUpdate();
+    }
   };
 
   const handleGoatPointsEdit = () => {
@@ -184,9 +216,25 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
     setPlayerTier(updatedPlayer.Tier);
   };
 
-  const filterAchievements = (achievements, category) => {
-    if (category === 'All') return Object.entries(achievements);
-    return Object.entries(achievements).filter(([name]) => categorizeAchievement(name) === category);
+  const filterAchievements = (achievements, category, searchTerm) => {
+    let filteredAchievements = Object.entries(achievements);
+    
+    if (category !== 'All') {
+      filteredAchievements = filteredAchievements.filter(([name]) => categorizeAchievement(name) === category);
+    }
+    
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      filteredAchievements = filteredAchievements.filter(([name]) => 
+        name.toLowerCase().includes(lowerSearchTerm)
+      );
+    }
+    
+    return filteredAchievements;
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const displayTier = playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier;
@@ -200,34 +248,42 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
           <h2 className="sidebar-player-name">{selectedPlayer ? selectedPlayer["Player Name"] : "Player Name"}</h2>
           <div className="player-tier">{displayTier}</div>
         </div>
-        {selectedPlayer && (
-          <div className="goat-points-container">
-            <h2>G.O.A.T Points</h2>
-            <div className="goat-points">
-              {editingGoatPoints ? (
-                <>
-                  <input
-                    type="text"
-                    value={goatPointsInput}
-                    onChange={handleGoatPointsInputChange}
-                    className="goat-points-input"
-                    autoFocus
-                  />
-                  <button onClick={handleGoatPointsUpdate} className="goat-points-action">
-                    <Save size={24} />
-                  </button>
-                </>
-              ) : (
-                <span className="highlight" onDoubleClick={handleGoatPointsEdit}>
-                  {goatPoints}
-                </span>
-              )}
-            </div>
+      {selectedPlayer && (
+        <div className="goat-points-container">
+          <h2>G.O.A.T Points</h2>
+          <div className="goat-points">
+            {editingGoatPoints ? (
+              <>
+                <input
+                  type="text"
+                  value={goatPointsInput}
+                  onChange={handleGoatPointsInputChange}
+                  onKeyPress={handleGoatPointsKeyPress}
+                  className="goat-points-input"
+                  autoFocus
+                />
+                <button onClick={handleGoatPointsUpdate} className="goat-points-action">
+                  <Save size={24} />
+                </button>
+              </>
+            ) : (
+              <span className="highlight" onDoubleClick={handleGoatPointsEdit}>
+                {goatPoints}
+              </span>
+            )}
           </div>
-        )}
-        <div className="search-container">
-          <input type="text" placeholder="Search players..." className="search-bar" />
         </div>
+      )}
+        <div className="search-container">
+          <input 
+            type="text" 
+            placeholder="Search achievements..." 
+            className="search-bar"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
+
         <h3>Categories</h3>
         <div className="categories">
           <CategoryButton icon={Trophy} name="Championships" onClick={() => setSelectedCategory('Championships')} />
@@ -261,7 +317,7 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
         <div className="achievements">
           <h3>Achievements - {selectedCategory}</h3>
           {selectedPlayer && selectedPlayer.Achievements ? (
-            filterAchievements(selectedPlayer.Achievements, selectedCategory).map(([name, value]) => (
+            filterAchievements(selectedPlayer.Achievements, selectedCategory, searchTerm).map(([name, value]) => (
               <Achievement 
                 key={name} 
                 name={name} 

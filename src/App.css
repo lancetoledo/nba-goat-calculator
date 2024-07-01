@@ -305,7 +305,6 @@ body, html {
   border: none;
   color: inherit;
   cursor: pointer;
-  margin-right: 15px;
   font-size: 20px;
   transition: transform 0.2s ease;
 }
@@ -313,6 +312,10 @@ body, html {
 .achievement-toggle:hover,
 .achievement-action:hover {
   transform: scale(1.1);
+}
+
+.achievement-action {
+  margin-left: auto;
 }
 
 .achievement-input {
@@ -324,6 +327,13 @@ body, html {
   color: white;
   border-radius: 5px;
   font-size: 18px;
+  text-align: center;
+}
+
+.achievement-input:focus {
+  outline: none;
+  border-color: #e63946;
+  box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
 }
 
 .achievement-name {
@@ -331,9 +341,11 @@ body, html {
 }
 
 .achievement-value {
+  margin-left: 10px;
   margin-right: 15px;
   font-weight: bold;
   color: #e63946;
+  cursor: pointer;
 }
 
 .achievement.completed .achievement-value {
