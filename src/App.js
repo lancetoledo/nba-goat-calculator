@@ -8,7 +8,7 @@ import playersData from './players.json';
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [players, setPlayers] = useState(playersData.players)
+  const [players, setPlayers] = useState(playersData.players);
 
   useEffect(() => {
     fetchPlayers();
@@ -32,7 +32,6 @@ function App() {
     }
   };
 
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -49,7 +48,15 @@ function App() {
       const updatedPlayers = players.map(player =>
         player["Player Name"] === updatedPlayer["Player Name"] ? updatedPlayer : player
       );
-      await updatePlayers(updatedPlayers);
+      
+      // Sort players by GOAT points and update ranks
+      const sortedPlayers = updatedPlayers.sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
+      const rankedPlayers = sortedPlayers.map((player, index) => ({
+        ...player,
+        rank: index + 1
+      }));
+
+      await updatePlayers(rankedPlayers);
       setSelectedPlayer(updatedPlayer);
       // Fetch the updated data immediately
       await fetchPlayers();
@@ -72,6 +79,7 @@ function App() {
         selectedPlayer={selectedPlayer} 
         onClose={toggleSidebar}
         onUpdatePlayer={handleUpdatePlayer}
+        allPlayers={players}
       />
     </div>
   );

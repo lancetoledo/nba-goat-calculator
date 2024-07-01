@@ -352,16 +352,17 @@ body, html {
   text-align: center;
   margin-bottom: 40px;
   background-color: #1a2b5e;
-  padding: 10px;
+  padding: 20px;
   border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .goat-points-container h2 {
-  font-size: 40px;
+  font-size: 28px;
   margin-bottom: 15px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  /* border-bottom: solid 2px #dedede; */
+  color: #ffffff;
 }
 
 .goat-points {
@@ -371,21 +372,33 @@ body, html {
 }
 
 .goat-points .highlight {
-  font-size: 72px;
+  font-size: 48px;
   color: #e63946;
   font-weight: bold;
-  margin-right: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.goat-points .highlight:hover {
+  transform: scale(1.05);
 }
 
 .goat-points-input {
-  width: 220px;
-  padding: 19px;
+  width: 200px;
+  padding: 10px 15px;
   font-size: 36px;
-  margin-right: 10px;
   background-color: #0f1d3f;
-  border: 1px solid #2a3b6e;
+  border: 2px solid #2a3b6e;
   color: white;
   border-radius: 5px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.goat-points-input:focus {
+  outline: none;
+  border-color: #e63946;
+  box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
 }
 
 .goat-points-action {
@@ -394,6 +407,13 @@ body, html {
   color: white;
   cursor: pointer;
   font-size: 24px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.goat-points-action:hover {
+  color: #e63946;
+  transform: scale(1.1);
 }
 
 .no-achievements {

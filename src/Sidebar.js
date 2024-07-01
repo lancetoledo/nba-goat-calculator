@@ -14,7 +14,6 @@ const Achievement = ({ name, value, onToggle, onValueChange }) => {
   const [editValue, setEditValue] = useState(value);
   const [isCompleted, setIsCompleted] = useState(false);
 
-
   useEffect(() => {
     setIsCompleted(typeof value === 'boolean' ? value : value > 0);
   }, [value]);
@@ -76,14 +75,31 @@ const categorizeAchievement = (achievementName) => {
   return 'Misc';
 };
 
-const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
+const determineTier = (points) => {
+  if (points >= 6500000) return "Tier 1";
+  if (points >= 5100000) return "Tier 2";
+  if (points >= 3700000) return "Tier 3";
+  if (points >= 2300000) return "Tier 4";
+  if (points >= 900000) return "Tier 5";
+  return "Got Next Tier";
+};
+
+const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }) => {
   const [editingGoatPoints, setEditingGoatPoints] = useState(false);
   const [goatPoints, setGoatPoints] = useState(selectedPlayer?.["Total GOAT Points"] || 0);
+  const [goatPointsInput, setGoatPointsInput] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [playerRank, setPlayerRank] = useState(selectedPlayer?.rank || 0);
+  const [playerTier, setPlayerTier] = useState(selectedPlayer?.Tier || "Got Next Tier");
 
   useEffect(() => {
-    setGoatPoints(selectedPlayer?.["Total GOAT Points"] || 0);
+    if (selectedPlayer) {
+      setGoatPoints(selectedPlayer["Total GOAT Points"] || 0);
+      setGoatPointsInput(selectedPlayer["Total GOAT Points"]?.toString() || '');
+      setPlayerRank(selectedPlayer.rank || 0);
+      setPlayerTier(selectedPlayer.Tier || "Got Next Tier");
+    }
   }, [selectedPlayer]);
 
   const calculateGoatPoints = (achievements) => {
@@ -98,12 +114,40 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
     }, 0);
   };
 
+  const updatePlayerRankAndTier = (updatedPlayer) => {
+    const sortedPlayers = [...allPlayers]
+      .map(player => player["Player Name"] === updatedPlayer["Player Name"] ? updatedPlayer : player)
+      .sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
+    
+    const newRank = sortedPlayers.findIndex(player => player["Player Name"] === updatedPlayer["Player Name"]) + 1;
+    const newTier = determineTier(updatedPlayer["Total GOAT Points"]);
+    
+    return { ...updatedPlayer, rank: newRank, Tier: newTier };
+  };
+
   const handleGoatPointsUpdate = () => {
-    onUpdatePlayer({
+    const newGoatPoints = goatPointsInput === '' ? 0 : parseInt(goatPointsInput, 10);
+    const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
-      "Total GOAT Points": goatPoints
+      "Total GOAT Points": newGoatPoints
     });
+    onUpdatePlayer(updatedPlayer);
+    setGoatPoints(newGoatPoints);
+    setPlayerRank(updatedPlayer.rank);
+    setPlayerTier(updatedPlayer.Tier);
     setEditingGoatPoints(false);
+  };
+
+  const handleGoatPointsEdit = () => {
+    setEditingGoatPoints(true);
+    setGoatPointsInput(goatPoints.toString());
+  };
+
+  const handleGoatPointsInputChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setGoatPointsInput(value);
+    }
   };
 
   const handleAchievementToggle = (achievementName) => {
@@ -112,12 +156,15 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
       [achievementName]: !selectedPlayer.Achievements[achievementName]
     };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
-    onUpdatePlayer({
+    const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
+    onUpdatePlayer(updatedPlayer);
     setGoatPoints(newGoatPoints);
+    setPlayerRank(updatedPlayer.rank);
+    setPlayerTier(updatedPlayer.Tier);
   };
 
   const handleAchievementValueChange = (achievementName, newValue) => {
@@ -126,12 +173,15 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
       [achievementName]: newValue
     };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
-    onUpdatePlayer({
+    const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
+    onUpdatePlayer(updatedPlayer);
     setGoatPoints(newGoatPoints);
+    setPlayerRank(updatedPlayer.rank);
+    setPlayerTier(updatedPlayer.Tier);
   };
 
   const filterAchievements = (achievements, category) => {
@@ -139,14 +189,14 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
     return Object.entries(achievements).filter(([name]) => categorizeAchievement(name) === category);
   };
 
-  const displayTier = selectedPlayer?.Tier === "Got Next Tier" ? "NXT ⬆️" : selectedPlayer?.Tier;
+  const displayTier = playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier;
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <button className="close-btn" onClick={onClose}><X size={24} /></button>
       <div className="sidebar-content">
         <div className="player-header">
-          <div className="player-rank">#{selectedPlayer?.rank}</div>
+          <div className="player-rank">#{playerRank}</div>
           <h2 className="sidebar-player-name">{selectedPlayer ? selectedPlayer["Player Name"] : "Player Name"}</h2>
           <div className="player-tier">{displayTier}</div>
         </div>
@@ -154,7 +204,24 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
           <div className="goat-points-container">
             <h2>G.O.A.T Points</h2>
             <div className="goat-points">
-              <span className="highlight">{goatPoints}</span>
+              {editingGoatPoints ? (
+                <>
+                  <input
+                    type="text"
+                    value={goatPointsInput}
+                    onChange={handleGoatPointsInputChange}
+                    className="goat-points-input"
+                    autoFocus
+                  />
+                  <button onClick={handleGoatPointsUpdate} className="goat-points-action">
+                    <Save size={24} />
+                  </button>
+                </>
+              ) : (
+                <span className="highlight" onDoubleClick={handleGoatPointsEdit}>
+                  {goatPoints}
+                </span>
+              )}
             </div>
           </div>
         )}
