@@ -333,15 +333,15 @@
     },
     {
       "Player Name": "Nikola Jokic",
-      "Total GOAT Points": 2500340,
+      "Total GOAT Points": 3100340,
       "image": "https://www.thesportsdb.com/images/media/player/cutout/a73zar1711897604.png",
       "Tier": "Tier 1",
       "Achievements": {
           "1x NBA Champion": true,
           "1x Finals MVP": true,
-          "2x MVP": true,
-          "5x All-Star": true,
-          "3x All-NBA First Team": true,
+          "3x MVP": true,
+          "6x All-Star": true,
+          "4x All-NBA First Team": true,
           "2x All-NBA Second Team": true
       },
       "rank": 23
@@ -527,6 +527,7 @@
       "Tier": "Tier 1",
       "Achievements": {
           "1x All-Star": true,
+          "1x All-NBA Second Team": true,
           "All-Rookie First Team": true
       },
       "rank": 36
