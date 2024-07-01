@@ -4,7 +4,7 @@ import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X } from 'luc
 const CategoryButton = ({ icon: Icon, name }) => (
   <button className="category-button">
     <Icon size={24} />
-    <span>{name}</span>
+    <span className='type'>{name}</span>
   </button>
 );
 

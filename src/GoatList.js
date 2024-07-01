@@ -84,7 +84,7 @@ const GoatList = ({ isSidebarOpen, toggleSidebar, onPlayerClick, selectedPlayer,
       <div className="goat-list">
         <div className="goat-list-header">
           <button className="sidebar-toggle" onClick={toggleSidebar}>☰</button>
-          <h1>⚔️ SQUADRON's GOAT List</h1>
+          <h1>⚔️ SQUADRON's G.O.A.T List</h1>
         </div>
         {Object.entries(tiers).map(([tier, players]) => 
           tier !== "Got Next Tier" ? (
@@ -98,7 +98,7 @@ const GoatList = ({ isSidebarOpen, toggleSidebar, onPlayerClick, selectedPlayer,
           ) : null
         )}
         <div className="next-tier">
-          <h2>SQUADRON's Got Next Tier</h2>
+          <h2>🔜 SQUADRON's Got Next Tier</h2>
           <div className="players">
             {tiers["Got Next Tier"].map((player) => (
               <PlayerIcon 
