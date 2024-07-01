@@ -104,7 +104,7 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
         </div>
         {selectedPlayer && (
           <div className="goat-points-container">
-            <h3>G.O.A.T Points</h3>
+            <h2>G.O.A.T Points</h2>
             <div className="goat-points">
               {editingGoatPoints ? (
                 <>
