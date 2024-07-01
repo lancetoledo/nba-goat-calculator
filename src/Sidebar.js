@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X } from 'lucide-react';
+import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X, Award, Star, CircleDollarSign } from 'lucide-react';
+import criteria from './criteria.json';
 
-const CategoryButton = ({ icon: Icon, name }) => (
-  <button className="category-button">
+const CategoryButton = ({ icon: Icon, name, onClick }) => (
+  <button className="category-button" onClick={onClick}>
     <Icon size={24} />
     <span className='type'>{name}</span>
   </button>
@@ -11,61 +12,97 @@ const CategoryButton = ({ icon: Icon, name }) => (
 const Achievement = ({ name, value, onToggle, onValueChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+
+  useEffect(() => {
+    setIsCompleted(typeof value === 'boolean' ? value : value > 0);
+  }, [value]);
 
   const handleSave = () => {
     onValueChange(name, editValue);
     setIsEditing(false);
   };
 
-  if (typeof value === 'boolean') {
-    return (
-      <div className="achievement">
-        <button onClick={() => onToggle(name)} className="achievement-toggle">
+  const handleToggle = () => {
+    onToggle(name);
+    setIsCompleted(!isCompleted);
+  };
+
+  return (
+    <div className={`achievement ${isCompleted ? 'completed' : ''}`}>
+      {typeof value === 'boolean' ? (
+        <button onClick={handleToggle} className="achievement-toggle">
           {value ? <CheckSquare size={24} /> : <Square size={24} />}
         </button>
-        <span className="achievement-name">{name}</span>
-      </div>
-    );
-  } else if (typeof value === 'number') {
-    return (
-      <div className="achievement">
-        {isEditing ? (
-          <>
-            <input 
-              type="number" 
-              value={editValue} 
-              onChange={(e) => setEditValue(Number(e.target.value))}
-              className="achievement-input"
-            />
-            <Save size={24} onClick={handleSave} className="achievement-action" />
-          </>
-        ) : (
-          <>
-            <span className="achievement-value">{value}</span>
-            <Edit2 size={24} onClick={() => setIsEditing(true)} className="achievement-action" />
-          </>
-        )}
-        <span className="achievement-name">{name}</span>
-      </div>
-    );
+      ) : (
+        <>
+          {isEditing ? (
+            <>
+              <input 
+                type="number" 
+                value={editValue} 
+                onChange={(e) => setEditValue(Number(e.target.value))}
+                className="achievement-input"
+              />
+              <Save size={24} onClick={handleSave} className="achievement-action" />
+            </>
+          ) : (
+            <>
+              <span className="achievement-value">{value}</span>
+              <Edit2 size={24} onClick={() => setIsEditing(true)} className="achievement-action" />
+            </>
+          )}
+        </>
+      )}
+      <span className="achievement-name">{name}</span>
+    </div>
+  );
+};
+
+const achievementCategories = {
+  Championships: ['Championship', 'Finals'],
+  'NBA Awards': ['MVP', 'DPOY', 'All-Star', 'All-NBA', 'All-Defensive'],
+  'Rookie Achievements': ['Rookie', 'rookie'],
+  Misc: [],
+};
+
+const categorizeAchievement = (achievementName) => {
+  for (const [category, keywords] of Object.entries(achievementCategories)) {
+    if (keywords.some(keyword => achievementName.includes(keyword))) {
+      return category;
+    }
   }
-  return null;
+  return 'Misc';
 };
 
 const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
   const [editingGoatPoints, setEditingGoatPoints] = useState(false);
   const [goatPoints, setGoatPoints] = useState(selectedPlayer?.["Total GOAT Points"] || 0);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setGoatPoints(selectedPlayer?.["Total GOAT Points"] || 0);
   }, [selectedPlayer]);
+
+  const calculateGoatPoints = (achievements) => {
+    return Object.entries(achievements).reduce((total, [name, value]) => {
+      const criteriaPoints = criteria.Achievements[name] || 0;
+      if (typeof value === 'boolean' && value) {
+        return total + criteriaPoints;
+      } else if (typeof value === 'number') {
+        return total + (value * criteriaPoints);
+      }
+      return total;
+    }, 0);
+  };
 
   const handleGoatPointsUpdate = () => {
     onUpdatePlayer({
       ...selectedPlayer,
       "Total GOAT Points": goatPoints
     });
-    console.log("UPDATED GOAT POINTS")
     setEditingGoatPoints(false);
   };
 
@@ -74,10 +111,13 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
       ...selectedPlayer.Achievements,
       [achievementName]: !selectedPlayer.Achievements[achievementName]
     };
+    const newGoatPoints = calculateGoatPoints(updatedAchievements);
     onUpdatePlayer({
       ...selectedPlayer,
-      Achievements: updatedAchievements
+      Achievements: updatedAchievements,
+      "Total GOAT Points": newGoatPoints
     });
+    setGoatPoints(newGoatPoints);
   };
 
   const handleAchievementValueChange = (achievementName, newValue) => {
@@ -85,10 +125,18 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
       ...selectedPlayer.Achievements,
       [achievementName]: newValue
     };
+    const newGoatPoints = calculateGoatPoints(updatedAchievements);
     onUpdatePlayer({
       ...selectedPlayer,
-      Achievements: updatedAchievements
+      Achievements: updatedAchievements,
+      "Total GOAT Points": newGoatPoints
     });
+    setGoatPoints(newGoatPoints);
+  };
+
+  const filterAchievements = (achievements, category) => {
+    if (category === 'All') return Object.entries(achievements);
+    return Object.entries(achievements).filter(([name]) => categorizeAchievement(name) === category);
   };
 
   const displayTier = selectedPlayer?.Tier === "Got Next Tier" ? "NXT ⬆️" : selectedPlayer?.Tier;
@@ -106,22 +154,7 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
           <div className="goat-points-container">
             <h2>G.O.A.T Points</h2>
             <div className="goat-points">
-              {editingGoatPoints ? (
-                <>
-                  <input 
-                    type="number" 
-                    value={goatPoints} 
-                    onChange={(e) => setGoatPoints(Number(e.target.value))}
-                    className="goat-points-input"
-                  />
-                  <Save size={24} onClick={handleGoatPointsUpdate} className="goat-points-action" />
-                </>
-              ) : (
-                <>
-                  <span className="highlight">{selectedPlayer["Total GOAT Points"]}</span>
-                  <Edit2 size={24} onClick={() => setEditingGoatPoints(true)} className="goat-points-action" />
-                </>
-              )}
+              <span className="highlight">{goatPoints}</span>
             </div>
           </div>
         )}
@@ -130,16 +163,38 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer }) => {
         </div>
         <h3>Categories</h3>
         <div className="categories">
-          <CategoryButton icon={Trophy} name="Championships" />
-          <CategoryButton icon={Trophy} name="NBA Awards" />
-          <CategoryButton icon={Trophy} name="Rookie Achievements" />
-          <CategoryButton icon={Trophy} name="Misc" />
-          <button className="more-categories"><MoreHorizontal size={24} /></button>
+          <CategoryButton icon={Trophy} name="Championships" onClick={() => setSelectedCategory('Championships')} />
+          <CategoryButton icon={Award} name="NBA Awards" onClick={() => setSelectedCategory('NBA Awards')} />
+          <CategoryButton icon={Star} name="Rookie Achievements" onClick={() => setSelectedCategory('Rookie Achievements')} />
+          <CategoryButton icon={CircleDollarSign} name="Misc" onClick={() => setSelectedCategory('Misc')} />
+          <button className="more-categories" onClick={() => setIsModalOpen(true)}><MoreHorizontal size={24} /></button>
         </div>
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>All Categories</h2>
+              <div className="category-list">
+                {['All', ...Object.keys(achievementCategories)].map((category) => (
+                  <button
+                    key={category}
+                    className="category-item"
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+              <button className="close-modal" onClick={() => setIsModalOpen(false)}>Close</button>
+            </div>
+          </div>
+        )}
         <div className="achievements">
-          <h3>Achievements</h3>
+          <h3>Achievements - {selectedCategory}</h3>
           {selectedPlayer && selectedPlayer.Achievements ? (
-            Object.entries(selectedPlayer.Achievements).map(([name, value]) => (
+            filterAchievements(selectedPlayer.Achievements, selectedCategory).map(([name, value]) => (
               <Achievement 
                 key={name} 
                 name={name} 
