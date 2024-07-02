@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // You'll need to install axios: npm install axios
+import axios from 'axios';
 import GoatList from './GoatList';
 import Sidebar from './Sidebar';
+import PlayerInputSidebar from './PlayerInputSidebar';
 import './App.css';
 import playersData from './players.json';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPlayerInputSidebarOpen, setIsPlayerInputSidebarOpen] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState(playersData.players);
 
@@ -34,12 +36,23 @@ function App() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    if (!isSidebarOpen) {
+      setIsPlayerInputSidebarOpen(false);
+    }
+  };
+
+  const togglePlayerInputSidebar = () => {
+    setIsPlayerInputSidebarOpen(!isPlayerInputSidebarOpen);
+    if (!isPlayerInputSidebarOpen) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const handlePlayerClick = (player) => {
     setSelectedPlayer(player);
     if (!isSidebarOpen) {
       setIsSidebarOpen(true);
+      setIsPlayerInputSidebarOpen(false);
     }
   };
 
@@ -49,7 +62,6 @@ function App() {
         player["Player Name"] === updatedPlayer["Player Name"] ? updatedPlayer : player
       );
       
-      // Sort players by GOAT points and update ranks
       const sortedPlayers = updatedPlayers.sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
       const rankedPlayers = sortedPlayers.map((player, index) => ({
         ...player,
@@ -58,18 +70,35 @@ function App() {
 
       await updatePlayers(rankedPlayers);
       setSelectedPlayer(updatedPlayer);
-      // Fetch the updated data immediately
       await fetchPlayers();
     } catch (error) {
       console.error('Error updating player:', error);
     }
   };
 
+  const handleAddPlayer = async (newPlayer) => {
+    try {
+      const updatedPlayers = [...players, newPlayer];
+      const sortedPlayers = updatedPlayers.sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
+      const rankedPlayers = sortedPlayers.map((player, index) => ({
+        ...player,
+        rank: index + 1
+      }));
+
+      await updatePlayers(rankedPlayers);
+      await fetchPlayers();
+    } catch (error) {
+      console.error('Error adding player:', error);
+    }
+  };
+
   return (
-    <div className={`App ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+    <div className={`App ${isSidebarOpen ? 'sidebar-open' : ''} ${isPlayerInputSidebarOpen ? 'player-input-sidebar-open' : ''}`}>
       <GoatList 
-        isSidebarOpen={isSidebarOpen} 
-        toggleSidebar={toggleSidebar} 
+        isSidebarOpen={isSidebarOpen}
+        isPlayerInputSidebarOpen={isPlayerInputSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        togglePlayerInputSidebar={togglePlayerInputSidebar}
         onPlayerClick={handlePlayerClick}
         selectedPlayer={selectedPlayer}
         players={players}
@@ -80,6 +109,12 @@ function App() {
         onClose={toggleSidebar}
         onUpdatePlayer={handleUpdatePlayer}
         allPlayers={players}
+      />
+      <PlayerInputSidebar
+        isOpen={isPlayerInputSidebarOpen}
+        onClose={togglePlayerInputSidebar}
+        onAddPlayer={handleAddPlayer}
+        players={players}
       />
     </div>
   );

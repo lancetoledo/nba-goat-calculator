@@ -27,11 +27,15 @@ body, html {
 }
 
 .App.sidebar-open .goat-list-container {
-  transform: translateX(900px); /* Increased to account for wider sidebar and extra spacing */
+  transform: translateX(440px);
+}
+
+.App.player-input-sidebar-open .goat-list-container {
+  transform: translateX(-440px);
 }
 
 .goat-list {
-  width: calc(100% - 220px); /* Adjust width to account for right margin and left padding */
+  width: calc(100% - 40px);
   max-width: 1600px;
   background-color: #1a2b5e;
   color: white;
@@ -39,11 +43,12 @@ body, html {
   border: 2px solid #2a3b6e;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
-  margin-right: 200px;
+  margin: 0 auto;
 }
 
 .goat-list-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -57,14 +62,14 @@ body, html {
   margin-right: 15px;
 }
 
-.sidebar {
+.sidebar,
+.player-input-sidebar {
   position: fixed;
   top: 0;
-  left: -820px;
-  width: 820px;
   height: 100%;
+  width: 820px;
   background-color: #0f1d3f;
-  transition: left 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
   z-index: 1000;
   box-sizing: border-box;
   overflow-y: auto;
@@ -73,9 +78,15 @@ body, html {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-.sidebar.open {
-  left: 0;
+.sidebar {
+  left: -820px;
+  transform: translateX(0);
 }
+
+.sidebar.open {
+  transform: translateX(820px);
+}
+
 
 .sidebar-content {
   padding: 20px;
@@ -352,6 +363,21 @@ body, html {
   color: #ffffff;
 }
 
+.achievement .trophy-emoji {
+  margin-right: 15px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.achievement.starting-point {
+  cursor: default;
+}
+
+.achievement.starting-point .achievement-value,
+.achievement.starting-point .achievement-name {
+  color: #4a90e2;
+}
+
 .no-achievements {
   color: #a0a0a0;
   font-style: italic;
@@ -565,9 +591,117 @@ h1 {
   justify-content: flex-start;
 }
 
+.player-input-sidebar {
+  right: -820px;
+  transform: translateX(0);
+}
+
+.player-input-sidebar.open {
+  transform: translateX(-820px);
+}
+
+.player-input-sidebar .sidebar-content {
+  padding: 20px;
+}
+
+.player-input-sidebar h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #2a3b6e;
+  padding-bottom: 10px;
+}
+
+.player-input-sidebar .form-group {
+  margin-bottom: 20px;
+}
+
+.player-input-sidebar label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.player-input-sidebar input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #1a2b5e;
+  border: 1px solid #2a3b6e;
+  color: white;
+  border-radius: 5px;
+}
+
+.player-input-sidebar .submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #e63946;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.player-input-sidebar .submit-btn:hover {
+  background-color: #f64c59;
+}
+
+.player-input-sidebar .submit-btn svg {
+  margin-right: 10px;
+}
+
+.player-input-sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 1640px) {
+  .App.sidebar-open .goat-list-container,
+  .App.player-input-sidebar-open .goat-list-container {
+    transform: translateX(0);
+  }
+
+  .goat-list {
+    width: 100%;
+    margin: 0;
+  }
+
+  .sidebar,
+  .player-input-sidebar {
+    width: 100%;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .player-input-sidebar {
+    transform: translateX(100%);
+  }
+
+  .player-input-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
 @media (max-width: 1400px) { /* Increased from 1200px to account for wider sidebar */
   .App.sidebar-open .goat-list-container {
     transform: translateX(calc(100% + 220px));
+  }
+
+  .App.player-input-sidebar-open .goat-list-container {
+    transform: translateX(-100%);
   }
 
   .goat-list {
@@ -578,6 +712,11 @@ h1 {
   .sidebar {
     width: 100%;
     left: -100%;
+  }
+
+  .player-input-sidebar {
+    width: 100%;
+    right: -100%;
   }
 }
 

@@ -1,39 +1,37 @@
 import React, { useMemo } from 'react';
-import playersData from './players.json';
-import { User } from 'lucide-react';
+import { User, Menu, PlusSquare } from 'lucide-react';
 
 const PlayerIcon = ({ player, rank, onPlayerClick, isSelected }) => (
-    <div 
-      className={`player-icon ${isSelected ? 'selected' : ''}`} 
-      onClick={() => onPlayerClick(player)}
-    >
-      {player.image ? (
-        <img src={player.image} alt={player["Player Name"]} width={144} height={144} />
-      ) : (
-        <User size={144} />
-      )}
-      <div className="rank">{rank}</div>
-      <div className="player-name">{player["Player Name"]}</div>
-    </div>
-  );
+  <div 
+    className={`player-icon ${isSelected ? 'selected' : ''}`} 
+    onClick={() => onPlayerClick(player)}
+  >
+    {player.image ? (
+      <img src={player.image} alt={player["Player Name"]} width={144} height={144} />
+    ) : (
+      <User size={144} />
+    )}
+    <div className="rank">{rank}</div>
+    <div className="player-name">{player["Player Name"]}</div>
+  </div>
+);
 
-  const Tier = ({ tier, players, onPlayerClick, selectedPlayer }) => (
-    <div className={`tier tier-${tier}`}>
-      <div className="tier-label">{tier}</div>
-      <div className="players">
-        {players.map((player) => (
-          <PlayerIcon 
-            key={player["Player Name"]} 
-            player={player} 
-            rank={player.rank} 
-            onPlayerClick={onPlayerClick}
-            isSelected={selectedPlayer && selectedPlayer["Player Name"] === player["Player Name"]}
-          />
-        ))}
-      </div>
+const Tier = ({ tier, players, onPlayerClick, selectedPlayer }) => (
+  <div className={`tier tier-${tier}`}>
+    <div className="tier-label">{tier}</div>
+    <div className="players">
+      {players.map((player) => (
+        <PlayerIcon 
+          key={player["Player Name"]} 
+          player={player} 
+          rank={player.rank} 
+          onPlayerClick={onPlayerClick}
+          isSelected={selectedPlayer && selectedPlayer["Player Name"] === player["Player Name"]}
+        />
+      ))}
     </div>
-  );
-  
+  </div>
+);
 
 const determineTier = (points) => {
   if (points >= 6500000) return "Tier 1";
@@ -44,33 +42,32 @@ const determineTier = (points) => {
   return "Got Next Tier";
 };
 
-const GoatList = ({ isSidebarOpen, toggleSidebar, onPlayerClick, selectedPlayer, players }) => {
+const GoatList = ({ isSidebarOpen, isPlayerInputSidebarOpen, toggleSidebar, togglePlayerInputSidebar, onPlayerClick, selectedPlayer, players }) => {
+  const rankedAndTieredPlayers = useMemo(() => {
+    const sorted = [...players].sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
+    return sorted.map((player, index) => ({
+      ...player,
+      rank: index + 1,
+      Tier: determineTier(player["Total GOAT Points"])
+    }));
+  }, [players]);
 
-    const rankedAndTieredPlayers = useMemo(() => {
-        const sorted = [...players].sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
-        return sorted.map((player, index) => ({
-          ...player,
-          rank: index + 1,
-          Tier: determineTier(player["Total GOAT Points"])
-        }));
-      }, [players]);
+  const tiers = useMemo(() => {
+    const tiersObj = {
+      "Tier 1": [],
+      "Tier 2": [],
+      "Tier 3": [],
+      "Tier 4": [],
+      "Tier 5": [],
+      "Got Next Tier": []
+    };
 
-    const tiers = useMemo(() => {
-        const tiersObj = {
-          "Tier 1": [],
-          "Tier 2": [],
-          "Tier 3": [],
-          "Tier 4": [],
-          "Tier 5": [],
-          "Got Next Tier": []
-        };
-    
-        rankedAndTieredPlayers.forEach(player => {
-          tiersObj[player.Tier].push(player);
-        });
-    
-        return tiersObj;
-      }, [rankedAndTieredPlayers]);
+    rankedAndTieredPlayers.forEach(player => {
+      tiersObj[player.Tier].push(player);
+    });
+
+    return tiersObj;
+  }, [rankedAndTieredPlayers]);
 
   const handlePlayerClick = (player) => {
     onPlayerClick(player);
@@ -83,8 +80,13 @@ const GoatList = ({ isSidebarOpen, toggleSidebar, onPlayerClick, selectedPlayer,
     <div className="goat-list-container">
       <div className="goat-list">
         <div className="goat-list-header">
-          <button className="sidebar-toggle" onClick={toggleSidebar}>☰</button>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            <Menu size={24} />
+          </button>
           <h1>⚔️ SQUADRON's G.O.A.T List</h1>
+          <button className="player-input-sidebar-toggle" onClick={togglePlayerInputSidebar}>
+            <PlusSquare size={24} />
+          </button>
         </div>
         {Object.entries(tiers).map(([tier, players]) => 
           tier !== "Got Next Tier" ? (

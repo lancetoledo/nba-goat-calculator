@@ -1,268 +1,268 @@
 {
   "players": [
-      {
-        "Player Name": "Michael Jordan",
-        "Total GOAT Points": 9000000,
-        "image": "https://clutchpoints.com/_next/image?url=https%3A%2F%2Fclutchpoints-profile-pics.s3.amazonaws.com%2Fheadshots%2Fjordanm.png&w=320&q=100",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "6x NBA Champion": true,
-            "6x Finals MVP": true,
-            "5x MVP": true,
-            "14x All-Star": true,
-            "10x All-NBA First Team": true,
-            "9x All-Defensive First Team": true,
-            "Defensive Player of the Year": true,
-            "Rookie of the Year": true
-        },
-        "rank": 1
+    {
+      "Player Name": "Michael Jordan",
+      "Total GOAT Points": 9000000,
+      "image": "https://clutchpoints.com/_next/image?url=https%3A%2F%2Fclutchpoints-profile-pics.s3.amazonaws.com%2Fheadshots%2Fjordanm.png&w=320&q=100",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "6x NBA Champion": true,
+        "6x Finals MVP": true,
+        "5x MVP": true,
+        "14x All-Star": true,
+        "10x All-NBA First Team": true,
+        "9x All-Defensive First Team": true,
+        "Defensive Player of the Year": true,
+        "Rookie of the Year": true
+      },
+      "rank": 1
     },
     {
-        "Player Name": "LeBron James",
-        "Total GOAT Points": 7700000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/tx6wea1702374040.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "4x NBA Champion": true,
-            "4x Finals MVP": true,
-            "4x MVP": true,
-            "19x All-Star": true,
-            "13x All-NBA First Team": true,
-            "5x All-Defensive First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 2
+      "Player Name": "LeBron James",
+      "Total GOAT Points": 7700000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/tx6wea1702374040.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "4x NBA Champion": true,
+        "4x Finals MVP": true,
+        "4x MVP": true,
+        "19x All-Star": true,
+        "13x All-NBA First Team": true,
+        "5x All-Defensive First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 2
     },
     {
-        "Player Name": "Kobe Bryant",
-        "Total GOAT Points": 6500000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/8em6v71713719158.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "5x NBA Champion": true,
-            "2x Finals MVP": true,
-            "1x MVP": true,
-            "18x All-Star": true,
-            "11x All-NBA First Team": true,
-            "9x All-Defensive First Team": true
-        },
-        "rank": 3
+      "Player Name": "Kobe Bryant",
+      "Total GOAT Points": 6500000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/8em6v71713719158.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "5x NBA Champion": true,
+        "2x Finals MVP": true,
+        "1x MVP": true,
+        "18x All-Star": true,
+        "11x All-NBA First Team": true,
+        "9x All-Defensive First Team": true
+      },
+      "rank": 3
     },
     {
-        "Player Name": "Kareem Abdul-Jabbar",
-        "Total GOAT Points": 6300000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/o9rfqm1522695254.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "6x NBA Champion": true,
-            "2x Finals MVP": true,
-            "6x MVP": true,
-            "19x All-Star": true,
-            "10x All-NBA First Team": true,
-            "5x All-Defensive First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 4
+      "Player Name": "Kareem Abdul-Jabbar",
+      "Total GOAT Points": 6300000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/o9rfqm1522695254.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "6x NBA Champion": true,
+        "2x Finals MVP": true,
+        "6x MVP": true,
+        "19x All-Star": true,
+        "10x All-NBA First Team": true,
+        "5x All-Defensive First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 4
     },
     {
-        "Player Name": "Bill Russell",
-        "Total GOAT Points": 6100000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/ifh7ty1586513020.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "11x NBA Champion": true,
-            "5x MVP": true,
-            "12x All-Star": true,
-            "3x All-NBA First Team": true,
-            "1x All-Defensive First Team": true
-        },
-        "rank": 5
+      "Player Name": "Bill Russell",
+      "Total GOAT Points": 6100000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/ifh7ty1586513020.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "11x NBA Champion": true,
+        "5x MVP": true,
+        "12x All-Star": true,
+        "3x All-NBA First Team": true,
+        "1x All-Defensive First Team": true
+      },
+      "rank": 5
     },
     {
-        "Player Name": "Shaquille O'Neal",
-        "Total GOAT Points": 5900000,
-        "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/406.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "4x NBA Champion": true,
-            "3x Finals MVP": true,
-            "1x MVP": true,
-            "15x All-Star": true,
-            "8x All-NBA First Team": true
-        },
-        "rank": 6
+      "Player Name": "Shaquille O'Neal",
+      "Total GOAT Points": 5900000,
+      "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/406.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "4x NBA Champion": true,
+        "3x Finals MVP": true,
+        "1x MVP": true,
+        "15x All-Star": true,
+        "8x All-NBA First Team": true
+      },
+      "rank": 6
     },
     {
-        "Player Name": "Magic Johnson",
-        "Total GOAT Points": 5700000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/5n6ypp1522695533.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "5x NBA Champion": true,
-            "3x Finals MVP": true,
-            "3x MVP": true,
-            "12x All-Star": true,
-            "9x All-NBA First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 7
+      "Player Name": "Magic Johnson",
+      "Total GOAT Points": 5700000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/5n6ypp1522695533.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "5x NBA Champion": true,
+        "3x Finals MVP": true,
+        "3x MVP": true,
+        "12x All-Star": true,
+        "9x All-NBA First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 7
     },
     {
-        "Player Name": "Wilt Chamberlain",
-        "Total GOAT Points": 5500000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/jp7weo1586512253.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "2x NBA Champion": true,
-            "1x Finals MVP": true,
-            "4x MVP": true,
-            "13x All-Star": true,
-            "7x All-NBA First Team": true,
-            "2x All-Defensive First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 8
+      "Player Name": "Wilt Chamberlain",
+      "Total GOAT Points": 5500000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/jp7weo1586512253.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "2x NBA Champion": true,
+        "1x Finals MVP": true,
+        "4x MVP": true,
+        "13x All-Star": true,
+        "7x All-NBA First Team": true,
+        "2x All-Defensive First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 8
     },
     {
-        "Player Name": "Larry Bird",
-        "Total GOAT Points": 5300000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/n7qw141493061483.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "3x NBA Champion": true,
-            "2x Finals MVP": true,
-            "3x MVP": true,
-            "12x All-Star": true,
-            "9x All-NBA First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 9
+      "Player Name": "Larry Bird",
+      "Total GOAT Points": 5300000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/n7qw141493061483.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "3x NBA Champion": true,
+        "2x Finals MVP": true,
+        "3x MVP": true,
+        "12x All-Star": true,
+        "9x All-NBA First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 9
     },
     {
-        "Player Name": "Tim Duncan",
-        "Total GOAT Points": 5100000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/17w6so1713902597.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "5x NBA Champion": true,
-            "3x Finals MVP": true,
-            "2x MVP": true,
-            "15x All-Star": true,
-            "10x All-NBA First Team": true,
-            "8x All-Defensive First Team": true,
-            "Rookie of the Year": true
-        },
-        "rank": 10
+      "Player Name": "Tim Duncan",
+      "Total GOAT Points": 5100000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/17w6so1713902597.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "5x NBA Champion": true,
+        "3x Finals MVP": true,
+        "2x MVP": true,
+        "15x All-Star": true,
+        "10x All-NBA First Team": true,
+        "8x All-Defensive First Team": true,
+        "Rookie of the Year": true
+      },
+      "rank": 10
     },
     {
-        "Player Name": "Stephen Curry",
-        "Total GOAT Points": 4912000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/ljgyln1711802711.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "4x NBA Champion": true,
-            "1x Finals MVP": true,
-            "2x MVP": true,
-            "9x All-Star": true,
-            "4x All-NBA First Team": true
-        },
-        "rank": 11
+      "Player Name": "Stephen Curry",
+      "Total GOAT Points": 4912000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/ljgyln1711802711.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "4x NBA Champion": true,
+        "1x Finals MVP": true,
+        "2x MVP": true,
+        "9x All-Star": true,
+        "4x All-NBA First Team": true
+      },
+      "rank": 11
     },
     {
-        "Player Name": "Hakeem Olajuwon",
-        "Total GOAT Points": 4700000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/2g6uns1526117687.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "2x NBA Champion": true,
-            "2x Finals MVP": true,
-            "1x MVP": true,
-            "12x All-Star": true,
-            "6x All-NBA First Team": true,
-            "5x All-Defensive First Team": true
-        },
-        "rank": 12
+      "Player Name": "Hakeem Olajuwon",
+      "Total GOAT Points": 4700000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/2g6uns1526117687.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "2x NBA Champion": true,
+        "2x Finals MVP": true,
+        "1x MVP": true,
+        "12x All-Star": true,
+        "6x All-NBA First Team": true,
+        "5x All-Defensive First Team": true
+      },
+      "rank": 12
     },
     {
-        "Player Name": "Oscar Robertson",
-        "Total GOAT Points": 4500000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/f433x31667039361.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "1x NBA Champion": true,
-            "1x MVP": true,
-            "12x All-Star": true,
-            "9x All-NBA First Team": true
-        },
-        "rank": 13
+      "Player Name": "Oscar Robertson",
+      "Total GOAT Points": 4500000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/f433x31667039361.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x NBA Champion": true,
+        "1x MVP": true,
+        "12x All-Star": true,
+        "9x All-NBA First Team": true
+      },
+      "rank": 13
     },
     {
-        "Player Name": "Kevin Durant",
-        "Total GOAT Points": 4375000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/fiem831698837888.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "2x NBA Champion": true,
-            "2x Finals MVP": true,
-            "1x MVP": true,
-            "13x All-Star": true,
-            "6x All-NBA First Team": true
-        },
-        "rank": 14
+      "Player Name": "Kevin Durant",
+      "Total GOAT Points": 4375000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/fiem831698837888.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "2x NBA Champion": true,
+        "2x Finals MVP": true,
+        "1x MVP": true,
+        "13x All-Star": true,
+        "6x All-NBA First Team": true
+      },
+      "rank": 14
     },
     {
-        "Player Name": "Kevin Garnett",
-        "Total GOAT Points": 4100000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/qqtspy1424628750.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "1x NBA Champion": true,
-            "1x MVP": true,
-            "15x All-Star": true,
-            "4x All-NBA First Team": true,
-            "9x All-Defensive First Team": true
-        },
-        "rank": 15
+      "Player Name": "Kevin Garnett",
+      "Total GOAT Points": 4100000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/qqtspy1424628750.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x NBA Champion": true,
+        "1x MVP": true,
+        "15x All-Star": true,
+        "4x All-NBA First Team": true,
+        "9x All-Defensive First Team": true
+      },
+      "rank": 15
     },
     {
-        "Player Name": "Jerry West",
-        "Total GOAT Points": 3900000,
-        "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/78497.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "1x NBA Champion": true,
-            "1x Finals MVP": true,
-            "14x All-Star": true,
-            "10x All-NBA First Team": true,
-            "4x All-Defensive First Team": true
-        },
-        "rank": 16
+      "Player Name": "Jerry West",
+      "Total GOAT Points": 3900000,
+      "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/78497.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x NBA Champion": true,
+        "1x Finals MVP": true,
+        "14x All-Star": true,
+        "10x All-NBA First Team": true,
+        "4x All-Defensive First Team": true
+      },
+      "rank": 16
     },
     {
-        "Player Name": "Karl Malone",
-        "Total GOAT Points": 3700000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/15firm1485542853.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "2x MVP": true,
-            "14x All-Star": true,
-            "11x All-NBA First Team": true,
-            "4x All-Defensive First Team": true
-        },
-        "rank": 17
+      "Player Name": "Karl Malone",
+      "Total GOAT Points": 3700000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/15firm1485542853.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "2x MVP": true,
+        "14x All-Star": true,
+        "11x All-NBA First Team": true,
+        "4x All-Defensive First Team": true
+      },
+      "rank": 17
     },
     {
-        "Player Name": "Julius Erving",
-        "Total GOAT Points": 3500000,
-        "image": "https://www.thesportsdb.com/images/media/player/cutout/l3pw3q1586518906.png",
-        "Tier": "Tier 1",
-        "Achievements": {
-            "1x NBA Champion": true,
-            "1x MVP": true,
-            "11x All-Star": true,
-            "7x All-NBA First Team": true
-        },
-        "rank": 18
+      "Player Name": "Julius Erving",
+      "Total GOAT Points": 3500000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/l3pw3q1586518906.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x NBA Champion": true,
+        "1x MVP": true,
+        "11x All-Star": true,
+        "7x All-NBA First Team": true
+      },
+      "rank": 18
     },
     {
       "Player Name": "Dirk Nowitzki",
@@ -270,13 +270,13 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/jbozd11667160135.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x NBA Champion": true,
-          "1x Finals MVP": true,
-          "1x MVP": true,
-          "14x All-Star": true,
-          "4x All-NBA First Team": true,
-          "5x All-NBA Second Team": true,
-          "3x All-NBA Third Team": true
+        "1x NBA Champion": true,
+        "1x Finals MVP": true,
+        "1x MVP": true,
+        "14x All-Star": true,
+        "4x All-NBA First Team": true,
+        "5x All-NBA Second Team": true,
+        "3x All-NBA Third Team": true
       },
       "rank": 19
     },
@@ -286,14 +286,14 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/qpvjee1586520264.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x NBA Champion": true,
-          "1x Finals MVP": true,
-          "3x MVP": true,
-          "12x All-Star": true,
-          "4x All-NBA First Team": true,
-          "4x All-NBA Second Team": true,
-          "1x All-Defensive First Team": true,
-          "1x All-Defensive Second Team": true
+        "1x NBA Champion": true,
+        "1x Finals MVP": true,
+        "3x MVP": true,
+        "12x All-Star": true,
+        "4x All-NBA First Team": true,
+        "4x All-NBA Second Team": true,
+        "1x All-Defensive First Team": true,
+        "1x All-Defensive Second Team": true
       },
       "rank": 20
     },
@@ -303,13 +303,13 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/p8xsvg1713703379.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "3x NBA Champion": true,
-          "1x Finals MVP": true,
-          "13x All-Star": true,
-          "2x All-NBA First Team": true,
-          "3x All-NBA Second Team": true,
-          "3x All-NBA Third Team": true,
-          "3x All-Defensive Second Team": true
+        "3x NBA Champion": true,
+        "1x Finals MVP": true,
+        "13x All-Star": true,
+        "2x All-NBA First Team": true,
+        "3x All-NBA Second Team": true,
+        "3x All-NBA Third Team": true,
+        "3x All-Defensive Second Team": true
       },
       "rank": 21
     },
@@ -319,30 +319,30 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/mschrn1702559698.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x NBA Champion": true,
-          "1x Finals MVP": true,
-          "2x MVP": true,
-          "7x All-Star": true,
-          "5x All-NBA First Team": true,
-          "2x All-NBA Second Team": true,
-          "1x Defensive Player of the Year": true,
-          "4x All-Defensive First Team": true,
-          "1x All-Defensive Second Team": true
+        "1x NBA Champion": true,
+        "1x Finals MVP": true,
+        "2x MVP": true,
+        "7x All-Star": true,
+        "5x All-NBA First Team": true,
+        "2x All-NBA Second Team": true,
+        "1x Defensive Player of the Year": true,
+        "4x All-Defensive First Team": true,
+        "1x All-Defensive Second Team": true
       },
       "rank": 22
     },
     {
       "Player Name": "Nikola Jokic",
-      "Total GOAT Points": 3100340,
+      "Total GOAT Points": 2500340,
       "image": "https://www.thesportsdb.com/images/media/player/cutout/a73zar1711897604.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x NBA Champion": true,
-          "1x Finals MVP": true,
-          "3x MVP": true,
-          "6x All-Star": true,
-          "4x All-NBA First Team": true,
-          "2x All-NBA Second Team": true
+        "1x NBA Champion": true,
+        "1x Finals MVP": true,
+        "2x MVP": true,
+        "5x All-Star": true,
+        "3x All-NBA First Team": true,
+        "2x All-NBA Second Team": true
       },
       "rank": 23
     },
@@ -352,13 +352,13 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/63bcy61602278478.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "6x NBA Champion": true,
-          "7x All-Star": true,
-          "3x All-NBA First Team": true,
-          "2x All-NBA Second Team": true,
-          "2x All-NBA Third Team": true,
-          "8x All-Defensive First Team": true,
-          "2x All-Defensive Second Team": true
+        "6x NBA Champion": true,
+        "7x All-Star": true,
+        "3x All-NBA First Team": true,
+        "2x All-NBA Second Team": true,
+        "2x All-NBA Third Team": true,
+        "8x All-Defensive First Team": true,
+        "2x All-Defensive Second Team": true
       },
       "rank": 24
     },
@@ -368,11 +368,11 @@
       "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/78318.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "2x NBA Champion": true,
-          "1x Finals MVP": true,
-          "12x All-Star": true,
-          "3x All-NBA First Team": true,
-          "2x All-NBA Second Team": true
+        "2x NBA Champion": true,
+        "1x Finals MVP": true,
+        "12x All-Star": true,
+        "3x All-NBA First Team": true,
+        "2x All-NBA Second Team": true
       },
       "rank": 25
     },
@@ -382,14 +382,14 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/qbgufr1609008475.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "2x NBA Champion": true,
-          "2x Finals MVP": true,
-          "2x Defensive Player of the Year": true,
-          "5x All-Star": true,
-          "3x All-NBA First Team": true,
-          "2x All-NBA Second Team": true,
-          "2x All-Defensive First Team": true,
-          "5x All-Defensive Second Team": true
+        "2x NBA Champion": true,
+        "2x Finals MVP": true,
+        "2x Defensive Player of the Year": true,
+        "5x All-Star": true,
+        "3x All-NBA First Team": true,
+        "2x All-NBA Second Team": true,
+        "2x All-Defensive First Team": true,
+        "5x All-Defensive Second Team": true
       },
       "rank": 26
     },
@@ -399,11 +399,11 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/2zecpi1526118084.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "11x All-Star": true,
-          "1x All-NBA First Team": true,
-          "6x All-NBA Second Team": true,
-          "3x All-Defensive Second Team": true,
-          "Rookie of the Year": true
+        "11x All-Star": true,
+        "1x All-NBA First Team": true,
+        "6x All-NBA Second Team": true,
+        "3x All-Defensive Second Team": true,
+        "Rookie of the Year": true
       },
       "rank": 27
     },
@@ -413,13 +413,13 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/j6kup21698832453.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "12x All-Star": true,
-          "4x All-NBA First Team": true,
-          "5x All-NBA Second Team": true,
-          "1x All-NBA Third Team": true,
-          "7x All-Defensive First Team": true,
-          "2x All-Defensive Second Team": true,
-          "Rookie of the Year": true
+        "12x All-Star": true,
+        "4x All-NBA First Team": true,
+        "5x All-NBA Second Team": true,
+        "1x All-NBA Third Team": true,
+        "7x All-Defensive First Team": true,
+        "2x All-Defensive Second Team": true,
+        "Rookie of the Year": true
       },
       "rank": 28
     },
@@ -429,12 +429,12 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/xkd6jc1602351653.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x MVP": true,
-          "11x All-Star": true,
-          "3x All-NBA First Team": true,
-          "3x All-NBA Second Team": true,
-          "1x All-NBA Third Team": true,
-          "Rookie of the Year": true
+        "1x MVP": true,
+        "11x All-Star": true,
+        "3x All-NBA First Team": true,
+        "3x All-NBA Second Team": true,
+        "1x All-NBA Third Team": true,
+        "Rookie of the Year": true
       },
       "rank": 29
     },
@@ -444,11 +444,11 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/ub9e211598562588.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "10x All-Star": true,
-          "2x All-NBA First Team": true,
-          "6x All-NBA Second Team": true,
-          "3x All-NBA Third Team": true,
-          "5x All-Defensive Second Team": true
+        "10x All-Star": true,
+        "2x All-NBA First Team": true,
+        "6x All-NBA Second Team": true,
+        "3x All-NBA Third Team": true,
+        "5x All-Defensive Second Team": true
       },
       "rank": 30
     },
@@ -458,43 +458,17 @@
       "image": "https://cdn.nba.com/headshots/nba/latest/1040x760/764.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "2x NBA Champion": true,
-          "1x MVP": true,
-          "10x All-Star": true,
-          "4x All-NBA First Team": true,
-          "2x All-NBA Second Team": true,
-          "4x All-NBA Third Team": true,
-          "4x All-Defensive First Team": true,
-          "4x All-Defensive Second Team": true,
-          "Rookie of the Year": true
+        "2x NBA Champion": true,
+        "1x MVP": true,
+        "10x All-Star": true,
+        "4x All-NBA First Team": true,
+        "2x All-NBA Second Team": true,
+        "4x All-NBA Third Team": true,
+        "4x All-Defensive First Team": true,
+        "4x All-Defensive Second Team": true,
+        "Rookie of the Year": true
       },
       "rank": 31
-    },
-    {
-      "Player Name": "Luka Doncic",
-      "Total GOAT Points": 500040,
-      "image": "https://www.thesportsdb.com/images/media/player/cutout/27l68o1645309356.png",
-      "Tier": "Tier 1",
-      "Achievements": {
-          "5x All-NBA First Team": true,
-          "5x All-Star": true,
-          "Scoring Champion": true
-      },
-      "rank": 32
-    },
-    {
-      "Player Name": "Joel Embiid",
-      "Total GOAT Points": 500030,
-      "image": "https://www.thesportsdb.com/images/media/player/cutout/uzvosh1645222714.png",
-      "Tier": "Tier 1",
-      "Achievements": {
-          "1x MVP": true,
-          "2x Scoring Champion": true,
-          "6x All-Star": true,
-          "4x All-NBA First Team": true,
-          "3x All-Defensive Second Team": true
-      },
-      "rank": 33
     },
     {
       "Player Name": "Jayson Tatum",
@@ -502,23 +476,38 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/ym6tpl1711802441.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x NBA Champion": true,
-          "4x All-Star": true,
-          "3x All-NBA First Team": true,
-          "1x All-NBA Second Team": true
+        "1x NBA Champion": true,
+        "4x All-Star": true,
+        "3x All-NBA First Team": true,
+        "1x All-NBA Second Team": true
       },
-      "rank": 34
+      "rank": 32
     },
     {
-      "Player Name": "Zion Williamson",
-      "Total GOAT Points": 50000,
-      "image": "https://www.thesportsdb.com/images/media/player/cutout/zplz8c1709062721.png",
+      "Player Name": "Luka Doncic",
+      "Total GOAT Points": 500040,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/27l68o1645309356.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x All-Star": true,
-          "All-Rookie First Team": true
+        "5x All-NBA First Team": true,
+        "5x All-Star": true,
+        "Scoring Champion": true
       },
-      "rank": 35
+      "rank": 33
+    },
+    {
+      "Player Name": "Joel Embiid",
+      "Total GOAT Points": 500030,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/uzvosh1645222714.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x MVP": true,
+        "2x Scoring Champion": true,
+        "6x All-Star": true,
+        "4x All-NBA First Team": true,
+        "3x All-Defensive Second Team": true
+      },
+      "rank": 34
     },
     {
       "Player Name": "Anthony Edwards",
@@ -526,11 +515,10 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/d1xthv1704196318.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "1x All-Star": true,
-          "1x All-NBA Second Team": true,
-          "All-Rookie First Team": true
+        "1x All-Star": true,
+        "All-Rookie First Team": true
       },
-      "rank": 36
+      "rank": 35
     },
     {
       "Player Name": "Jalen Brunson",
@@ -538,19 +526,30 @@
       "image": "https://www.thesportsdb.com/images/media/player/cutout/mr4fe21711892054.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "Most Improved Player": true,
-          "1x All-NBA Second Team": true
+        "Most Improved Player": true,
+        "1x All-NBA Second Team": true
       },
-      "rank": 37
+      "rank": 36
     },
     {
       "Player Name": "Victor Wembanyama",
       "Total GOAT Points": 405140,
       "image": "https://www.thesportsdb.com/images/media/player/cutout/jlrgxf1697880842.png",
+      "Tier": "Got Next Tier",
+      "Achievements": {
+        "Rookie of the Year": true,
+        "1x All-Defensive First Team": true
+      },
+      "rank": 37
+    },
+    {
+      "Player Name": "Zion Williamson",
+      "Total GOAT Points": 50000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/zplz8c1709062721.png",
       "Tier": "Tier 1",
       "Achievements": {
-          "Rookie of the Year": true,
-          "1x All-Defensive First Team": true
+        "1x All-Star": true,
+        "All-Rookie First Team": true
       },
       "rank": 38
     },
