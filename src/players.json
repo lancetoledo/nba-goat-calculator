@@ -543,23 +543,12 @@
       "rank": 37
     },
     {
-      "Player Name": "Zion Williamson",
-      "Total GOAT Points": 50000,
-      "image": "https://www.thesportsdb.com/images/media/player/cutout/zplz8c1709062721.png",
-      "Tier": "Tier 1",
-      "Achievements": {
-        "1x All-Star": true,
-        "All-Rookie First Team": true
-      },
-      "rank": 38
-    },
-    {
-      "Player Name": "Frankie Maravilla",
-      "Total GOAT Points": 0,
-      "image": "https://i.imgur.com/R5Errz2.png",
+      "Player Name": "Lance Toledo",
+      "Total GOAT Points": 300000,
+      "image": "https://i.imgur.com/SmfxCec.png",
       "Tier": "Got Next Tier",
       "Achievements": {
-        "Win Championship as rookie": false,
+        "Win Championship as rookie": true,
         "Rookie Finals MVP": false,
         "Rookie Of The Year": false,
         "Most rookie Triple-Doubles": false,
@@ -910,12 +899,23 @@
         "Win All-Star Game": false,
         "Back-to-back 30+ point double-doubles": false
       },
+      "rank": 38
+    },
+    {
+      "Player Name": "Zion Williamson",
+      "Total GOAT Points": 50000,
+      "image": "https://www.thesportsdb.com/images/media/player/cutout/zplz8c1709062721.png",
+      "Tier": "Tier 1",
+      "Achievements": {
+        "1x All-Star": true,
+        "All-Rookie First Team": true
+      },
       "rank": 39
     },
     {
-      "Player Name": "Lance Toledo",
+      "Player Name": "Frankie Maravilla",
       "Total GOAT Points": 0,
-      "image": "https://i.imgur.com/SmfxCec.png",
+      "image": "https://i.imgur.com/R5Errz2.png",
       "Tier": "Got Next Tier",
       "Achievements": {
         "Win Championship as rookie": false,
