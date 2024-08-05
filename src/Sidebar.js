@@ -131,7 +131,7 @@ const sanitizeKey = (key) => {
   return key.replace(/[.#$/[\]]/g, '_');
 };
 
-const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers, criteria }) => {
+const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers, criteria, isDemoMode }) => {
   const [editingGoatPoints, setEditingGoatPoints] = useState(false);
   const [goatPoints, setGoatPoints] = useState(selectedPlayer?.["Total GOAT Points"] || 0);
   const [goatPointsInput, setGoatPointsInput] = useState('');
@@ -140,7 +140,14 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
   const [playerRank, setPlayerRank] = useState(selectedPlayer?.rank || 0);
   const [playerTier, setPlayerTier] = useState(selectedPlayer?.Tier || "Got Next Tier");
   const [searchTerm, setSearchTerm] = useState('');
+  const [demoAchievements, setDemoAchievements] = useState({});
 
+  useEffect(() => {
+    if (isDemoMode && selectedPlayer) {
+      setDemoAchievements(selectedPlayer.Achievements);
+    }
+  }, [isDemoMode, selectedPlayer]);
+  
   useEffect(() => {
     if (selectedPlayer) {
       setGoatPoints(selectedPlayer["Total GOAT Points"] || 0);
@@ -190,13 +197,18 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
       ...selectedPlayer,
       "Total GOAT Points": newGoatPoints
     });
-    onUpdatePlayer(updatedPlayer);
-    setGoatPoints(newGoatPoints);
-    setPlayerRank(updatedPlayer.rank);
-    setPlayerTier(updatedPlayer.Tier);
+    
+    if (isDemoMode) {
+      setGoatPoints(newGoatPoints);
+      setPlayerRank(updatedPlayer.rank);
+      setPlayerTier(updatedPlayer.Tier);
+    } else {
+      onUpdatePlayer(updatedPlayer);
+    }
+    
     setEditingGoatPoints(false);
     toast.success('GOAT Points updated successfully');
-  }, [goatPointsInput, selectedPlayer, updatePlayerRankAndTier, onUpdatePlayer]);
+  }, [goatPointsInput, selectedPlayer, updatePlayerRankAndTier, onUpdatePlayer, isDemoMode]);
 
   const handleGoatPointsKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -221,24 +233,36 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
       toast.error('This achievement cannot be toggled');
       return;
     }
-    const updatedAchievements = {
-      ...selectedPlayer.Achievements,
-      [achievementName]: !selectedPlayer.Achievements[achievementName]
-    };
+    
+    const updatedAchievements = isDemoMode
+      ? {
+          ...demoAchievements,
+          [achievementName]: !demoAchievements[achievementName]
+        }
+      : {
+          ...selectedPlayer.Achievements,
+          [achievementName]: !selectedPlayer.Achievements[achievementName]
+        };
+  
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
     const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-    
-    try {
-      await onUpdatePlayer(updatedPlayer);
-    } catch (error) {
-      console.error('Error updating achievement:', error);
-      toast.error('Failed to update achievement');
+  
+    if (isDemoMode) {
+      setDemoAchievements(updatedAchievements);
+    } else {
+      try {
+        await onUpdatePlayer(updatedPlayer);
+      } catch (error) {
+        console.error('Error updating achievement:', error);
+        toast.error('Failed to update achievement');
+      }
     }
-  }, [criteria, selectedPlayer, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
+  }, [isDemoMode, criteria, selectedPlayer, demoAchievements, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
+  
 
   const handleAchievementValueChange = useCallback(async (achievementName, newValue) => {
     const sanitizedName = sanitizeKey(achievementName);
@@ -246,24 +270,35 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
       toast.error('This achievement cannot be updated');
       return;
     }
-    const updatedAchievements = {
-      ...selectedPlayer.Achievements,
-      [achievementName]: newValue
-    };
+  
+    const updatedAchievements = isDemoMode
+      ? {
+          ...demoAchievements,
+          [achievementName]: newValue
+        }
+      : {
+          ...selectedPlayer.Achievements,
+          [achievementName]: newValue
+        };
+  
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
     const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-    
-    try {
-      await onUpdatePlayer(updatedPlayer);
-    } catch (error) {
-      console.error('Error updating achievement value:', error);
-      toast.error('Failed to update achievement value');
+  
+    if (isDemoMode) {
+      setDemoAchievements(updatedAchievements);
+    } else {
+      try {
+        await onUpdatePlayer(updatedPlayer);
+      } catch (error) {
+        console.error('Error updating achievement value:', error);
+        toast.error('Failed to update achievement value');
+      }
     }
-  }, [criteria, selectedPlayer, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
+  }, [isDemoMode, criteria, selectedPlayer, demoAchievements, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
 
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
@@ -298,10 +333,11 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
   }, [isAllAchievementsInCriteria, criteria]);
 
   const memoizedAchievements = useMemo(() => {
-    if (!selectedPlayer || !selectedPlayer.Achievements) {
+    if (!selectedPlayer) {
       return null;
     }
-    const filteredAchievements = memoizedFilterAchievements(selectedPlayer.Achievements, selectedCategory, searchTerm);
+    const achievements = isDemoMode ? demoAchievements : selectedPlayer.Achievements;
+    const filteredAchievements = memoizedFilterAchievements(achievements, selectedCategory, searchTerm);
     if (!Array.isArray(filteredAchievements)) {
       console.error('Filtered achievements is not an array:', filteredAchievements);
       return null;
@@ -318,7 +354,7 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
         isNewPlayer={isNewPlayer}
       />
     ));
-  }, [selectedPlayer, selectedCategory, searchTerm, memoizedFilterAchievements, handleAchievementToggle, handleAchievementValueChange]);
+  }, [selectedPlayer, selectedCategory, searchTerm, memoizedFilterAchievements, handleAchievementToggle, handleAchievementValueChange, isDemoMode, demoAchievements]);
 
   const displayTier = playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier;
 

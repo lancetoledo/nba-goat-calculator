@@ -6,6 +6,7 @@ import GoatList from './GoatList';
 import Sidebar from './Sidebar';
 import PlayerInputSidebar from './PlayerInputSidebar';
 import './App.css';
+import { ToggleLeft, ToggleRight } from 'lucide-react';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,6 +14,8 @@ function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState([]);
   const [criteria, setCriteria] = useState(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [demoPlayers, setDemoPlayers] = useState([]);
 
   useEffect(() => {
     const q = query(collection(db, 'players'), orderBy('Total GOAT Points', 'desc'));
@@ -62,21 +65,39 @@ function App() {
     };
   }, []);
 
-  const updatePlayer = useCallback(async (updatedPlayer) => {
-    try {
-      await setDoc(doc(db, 'players', updatedPlayer.id), updatedPlayer, { merge: true });
-    } catch (error) {
-      console.error('Error updating player:', error);
+  useEffect(() => {
+    if (isDemoMode) {
+      setDemoPlayers(JSON.parse(JSON.stringify(players)));
     }
-  }, []);
+  }, [isDemoMode, players]);
+
+  const updatePlayer = useCallback(async (updatedPlayer) => {
+    if (isDemoMode) {
+      setDemoPlayers(prevPlayers => 
+        prevPlayers.map(player => 
+          player.id === updatedPlayer.id ? updatedPlayer : player
+        )
+      );
+    } else {
+      try {
+        await setDoc(doc(db, 'players', updatedPlayer.id), updatedPlayer, { merge: true });
+      } catch (error) {
+        console.error('Error updating player:', error);
+      }
+    }
+  }, [isDemoMode]);
 
   const addPlayer = useCallback(async (newPlayer) => {
-    try {
-      await addDoc(collection(db, 'players'), newPlayer);
-    } catch (error) {
-      console.error('Error adding player:', error);
+    if (isDemoMode) {
+      setDemoPlayers(prevPlayers => [...prevPlayers, { ...newPlayer, id: Date.now().toString() }]);
+    } else {
+      try {
+        await addDoc(collection(db, 'players'), newPlayer);
+      } catch (error) {
+        console.error('Error adding player:', error);
+      }
     }
-  }, []);
+  }, [isDemoMode]);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(prev => !prev);
@@ -94,11 +115,21 @@ function App() {
     setIsPlayerInputSidebarOpen(false);
   }, []);
 
-  const memoizedPlayers = useMemo(() => players, [players]);
+  const toggleDemoMode = useCallback(() => {
+    setIsDemoMode(prev => !prev);
+  }, []);
+
+  const memoizedPlayers = useMemo(() => isDemoMode ? demoPlayers : players, [isDemoMode, demoPlayers, players]);
   const memoizedCriteria = useMemo(() => criteria, [criteria]);
 
   return (
     <div className={`App ${isSidebarOpen ? 'sidebar-open' : ''} ${isPlayerInputSidebarOpen ? 'player-input-sidebar-open' : ''}`}>
+      <div className="demo-mode-toggle">
+        <button onClick={toggleDemoMode} className="demo-toggle-btn">
+          {isDemoMode ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
+          <span>{isDemoMode ? 'Demo Mode' : 'Real Mode'}</span>
+        </button>
+      </div>
       <GoatList 
         isSidebarOpen={isSidebarOpen}
         isPlayerInputSidebarOpen={isPlayerInputSidebarOpen}
@@ -115,6 +146,7 @@ function App() {
         onUpdatePlayer={updatePlayer}
         allPlayers={memoizedPlayers}
         criteria={memoizedCriteria}
+        isDemoMode={isDemoMode}
       />
       <PlayerInputSidebar
         isOpen={isPlayerInputSidebarOpen}
@@ -122,6 +154,7 @@ function App() {
         onAddPlayer={addPlayer}
         players={memoizedPlayers}
         criteria={memoizedCriteria}
+        isDemoMode={isDemoMode}
       />
     </div>
   );
