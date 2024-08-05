@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X, Award, Star, CircleDollarSign, Info } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import criteria from './criteria.json';
 
-const CategoryButton = ({ icon: Icon, name, onClick }) => (
+const CategoryButton = React.memo(({ icon: Icon, name, onClick }) => (
   <button className="category-button" onClick={onClick}>
     <Icon size={24} />
     <span className='type'>{name}</span>
   </button>
-);
+));
 
-const Achievement = ({ name, value, onToggle, onValueChange, isInCriteria }) => {
+const Achievement = React.memo(({ name, value, onToggle, onValueChange, isInCriteria, isNewPlayer }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+
+  const isEditable = isNewPlayer || isInCriteria;
 
   useEffect(() => {
     setIsCompleted(typeof value === 'boolean' ? value : value > 0);
     setEditValue(value.toString());
   }, [value]);
 
-  const handleSave = () => {
-    if (!isInCriteria) return;
+  const handleSave = useCallback(() => {
+    if (!isEditable) return;
     const newValue = editValue === '' ? 0 : parseInt(editValue, 10);
     if (isNaN(newValue)) {
       toast.error('Please enter a valid number');
@@ -30,38 +31,37 @@ const Achievement = ({ name, value, onToggle, onValueChange, isInCriteria }) => 
     onValueChange(name, newValue);
     setIsEditing(false);
     toast.success('Achievement updated successfully');
-  };
+  }, [isEditable, editValue, name, onValueChange]);
 
-
-  const handleToggle = () => {
-    if (!isInCriteria) return;
+  const handleToggle = useCallback(() => {
+    if (!isEditable) return;
     onToggle(name);
     setIsCompleted(!isCompleted);
-  };
+  }, [isEditable, name, onToggle, isCompleted]);
 
-  const handleInputChange = (e) => {
-    if (!isInCriteria) return;
+  const handleInputChange = useCallback((e) => {
+    if (!isEditable) return;
     const inputValue = e.target.value;
     if (inputValue === '' || /^\d+$/.test(inputValue)) {
       setEditValue(inputValue);
     }
-  };
+  }, [isEditable]);
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
       handleSave();
     }
-  };
+  }, [handleSave]);
 
-  const startEditing = () => {
-    if (isInCriteria && typeof value !== 'boolean') {
+  const startEditing = useCallback(() => {
+    if (isEditable && typeof value !== 'boolean') {
       setIsEditing(true);
     }
-  };
+  }, [isEditable, value]);
 
   return (
-    <div className={`achievement ${isCompleted ? 'completed' : ''} ${isInCriteria ? 'criteria-based' : 'starting-point'}`}>
-      {isInCriteria ? (
+    <div className={`achievement ${isCompleted ? 'completed' : ''} ${isEditable ? 'criteria-based' : 'starting-point'}`}>
+      {isEditable ? (
         typeof value === 'boolean' ? (
           <button onClick={handleToggle} className="achievement-toggle">
             {value ? <CheckSquare size={24} /> : <Square size={24} />}
@@ -86,8 +86,8 @@ const Achievement = ({ name, value, onToggle, onValueChange, isInCriteria }) => 
         <span className="trophy-emoji" style={{ fontSize: '24px', width: '24px', height: '24px', display: 'inline-block', textAlign: 'center' }}>🏆</span>
       )}
       <span className="achievement-name">{name}</span>
-      {!isInCriteria && <Info size={24} className="starting-point-icon" title="Starting point (non-editable)" />}
-      {isInCriteria && typeof value !== 'boolean' && !isEditing && (
+      {!isEditable && <Info size={24} className="starting-point-icon" title="Starting point (non-editable)" />}
+      {isEditable && typeof value !== 'boolean' && !isEditing && (
         <Edit2 size={24} onClick={startEditing} className="achievement-action" />
       )}
       {isEditing && (
@@ -95,7 +95,12 @@ const Achievement = ({ name, value, onToggle, onValueChange, isInCriteria }) => 
       )}
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return prevProps.name === nextProps.name &&
+         prevProps.value === nextProps.value &&
+         prevProps.isInCriteria === nextProps.isInCriteria &&
+         prevProps.isNewPlayer === nextProps.isNewPlayer;
+});
 
 const achievementCategories = {
   Championships: ['Championship', 'Finals'],
@@ -122,7 +127,11 @@ const determineTier = (points) => {
   return "Got Next Tier";
 };
 
-const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }) => {
+const sanitizeKey = (key) => {
+  return key.replace(/[.#$/[\]]/g, '_');
+};
+
+const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers, criteria }) => {
   const [editingGoatPoints, setEditingGoatPoints] = useState(false);
   const [goatPoints, setGoatPoints] = useState(selectedPlayer?.["Total GOAT Points"] || 0);
   const [goatPointsInput, setGoatPointsInput] = useState('');
@@ -137,18 +146,20 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
       setGoatPoints(selectedPlayer["Total GOAT Points"] || 0);
       setGoatPointsInput(selectedPlayer["Total GOAT Points"]?.toString() || '');
       setPlayerRank(selectedPlayer.rank || 0);
-      setPlayerTier(selectedPlayer.Tier || "Got Next Tier");
+      setPlayerTier(determineTier(selectedPlayer["Total GOAT Points"]));
     }
   }, [selectedPlayer]);
 
-  const isAllAchievementsInCriteria = (achievements) => {
-    if (!achievements || typeof achievements !== 'object') return false;
-    return Object.keys(achievements).every(name => criteria.Achievements.hasOwnProperty(name));
-  };
+  const isAllAchievementsInCriteria = useCallback((achievements) => {
+    if (!achievements || typeof achievements !== 'object' || !criteria || !criteria.Achievements) return false;
+    return Object.keys(achievements).every(name => criteria.Achievements.hasOwnProperty(sanitizeKey(name)));
+  }, [criteria]);
 
-  const calculateGoatPoints = (achievements) => {
+  const calculateGoatPoints = useCallback((achievements) => {
+    if (!criteria || !criteria.Achievements) return 0;
     return Object.entries(achievements).reduce((total, [name, value]) => {
-      const criteriaPoints = criteria.Achievements[name] || 0;
+      const sanitizedName = sanitizeKey(name);
+      const criteriaPoints = criteria.Achievements[sanitizedName] || 0;
       if (typeof value === 'boolean' && value) {
         return total + criteriaPoints;
       } else if (typeof value === 'number') {
@@ -156,11 +167,9 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
       }
       return total;
     }, 0);
-  };
+  }, [criteria]);
 
-  
-
-  const updatePlayerRankAndTier = (updatedPlayer) => {
+  const updatePlayerRankAndTier = useCallback((updatedPlayer) => {
     const sortedPlayers = [...allPlayers]
       .map(player => player["Player Name"] === updatedPlayer["Player Name"] ? updatedPlayer : player)
       .sort((a, b) => b["Total GOAT Points"] - a["Total GOAT Points"]);
@@ -169,9 +178,9 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
     const newTier = determineTier(updatedPlayer["Total GOAT Points"]);
     
     return { ...updatedPlayer, rank: newRank, Tier: newTier };
-  };
+  }, [allPlayers]);
 
-  const handleGoatPointsUpdate = () => {
+  const handleGoatPointsUpdate = useCallback(() => {
     const newGoatPoints = goatPointsInput === '' ? 0 : parseInt(goatPointsInput, 10);
     if (isNaN(newGoatPoints)) {
       toast.error('Please enter a valid number for GOAT Points');
@@ -187,29 +196,28 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
     setPlayerTier(updatedPlayer.Tier);
     setEditingGoatPoints(false);
     toast.success('GOAT Points updated successfully');
-  };
+  }, [goatPointsInput, selectedPlayer, updatePlayerRankAndTier, onUpdatePlayer]);
 
-  const handleGoatPointsKeyPress = (e) => {
+  const handleGoatPointsKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
       handleGoatPointsUpdate();
     }
-  };
+  }, [handleGoatPointsUpdate]);
 
-  const handleGoatPointsEdit = () => {
+  const handleGoatPointsEdit = useCallback(() => {
     setEditingGoatPoints(true);
-  };
+  }, []);
 
-  const handleGoatPointsInputChange = (e) => {
+  const handleGoatPointsInputChange = useCallback((e) => {
     const value = e.target.value;
     if (value === '' || /^\d+$/.test(value)) {
       setGoatPointsInput(value);
     }
-  };
+  }, []);
 
-
-
-  const handleAchievementToggle = (achievementName) => {
-    if (!criteria.Achievements.hasOwnProperty(achievementName)) {
+  const handleAchievementToggle = useCallback(async (achievementName) => {
+    const sanitizedName = sanitizeKey(achievementName);
+    if (!criteria || !criteria.Achievements || !criteria.Achievements.hasOwnProperty(sanitizedName)) {
       toast.error('This achievement cannot be toggled');
       return;
     }
@@ -218,36 +226,55 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
       [achievementName]: !selectedPlayer.Achievements[achievementName]
     };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
-    onUpdatePlayer({
+    const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-    toast.success('Achievement toggled successfully');
-  };
+    
+    try {
+      await onUpdatePlayer(updatedPlayer);
+    } catch (error) {
+      console.error('Error updating achievement:', error);
+      toast.error('Failed to update achievement');
+    }
+  }, [criteria, selectedPlayer, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
 
-  const handleAchievementValueChange = (achievementName, newValue) => {
+  const handleAchievementValueChange = useCallback(async (achievementName, newValue) => {
+    const sanitizedName = sanitizeKey(achievementName);
+    if (!criteria || !criteria.Achievements || !criteria.Achievements.hasOwnProperty(sanitizedName)) {
+      toast.error('This achievement cannot be updated');
+      return;
+    }
     const updatedAchievements = {
       ...selectedPlayer.Achievements,
       [achievementName]: newValue
     };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
-    onUpdatePlayer({
+    const updatedPlayer = updatePlayerRankAndTier({
       ...selectedPlayer,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-    toast.success('Achievement value updated successfully');
-  };
+    
+    try {
+      await onUpdatePlayer(updatedPlayer);
+    } catch (error) {
+      console.error('Error updating achievement value:', error);
+      toast.error('Failed to update achievement value');
+    }
+  }, [criteria, selectedPlayer, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
 
-  
+  const handleSearch = useCallback((e) => {
+    setSearchTerm(e.target.value);
+  }, []);
 
-  const filterAchievements = (achievements, category, searchTerm) => {
+  const memoizedFilterAchievements = useCallback((achievements, category, searchTerm) => {
     if (!achievements || typeof achievements !== 'object') {
       console.error('Invalid achievements data:', achievements);
       return [];
     }
-
+  
     let filteredAchievements = Object.entries(achievements);
     
     if (category !== 'All') {
@@ -266,13 +293,32 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
     return filteredAchievements.map(([name, value]) => ({
       name,
       value,
-      isInCriteria: allInCriteria || criteria.Achievements.hasOwnProperty(name)
+      isInCriteria: allInCriteria || (criteria && criteria.Achievements && criteria.Achievements.hasOwnProperty(sanitizeKey(name)))
     }));
-  };
+  }, [isAllAchievementsInCriteria, criteria]);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const memoizedAchievements = useMemo(() => {
+    if (!selectedPlayer || !selectedPlayer.Achievements) {
+      return null;
+    }
+    const filteredAchievements = memoizedFilterAchievements(selectedPlayer.Achievements, selectedCategory, searchTerm);
+    if (!Array.isArray(filteredAchievements)) {
+      console.error('Filtered achievements is not an array:', filteredAchievements);
+      return null;
+    }
+    const isNewPlayer = selectedPlayer["Total GOAT Points"] === 0;
+    return filteredAchievements.map(({ name, value, isInCriteria }) => (
+      <Achievement 
+        key={`${name}-${value}`}
+        name={name} 
+        value={value} 
+        onToggle={handleAchievementToggle}
+        onValueChange={handleAchievementValueChange}
+        isInCriteria={isInCriteria}
+        isNewPlayer={isNewPlayer}
+      />
+    ));
+  }, [selectedPlayer, selectedCategory, searchTerm, memoizedFilterAchievements, handleAchievementToggle, handleAchievementValueChange]);
 
   const displayTier = playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier;
 
@@ -296,7 +342,7 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
                     type="text"
                     value={goatPointsInput}
                     onChange={handleGoatPointsInputChange}
-                    onKeyPress={handleGoatPointsKeyPress}
+                    onKeyDown={handleGoatPointsKeyPress}
                     className="goat-points-input"
                     autoFocus
                   />
@@ -321,7 +367,6 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
             onChange={handleSearch}
           />
         </div>
-
         <h3>Categories</h3>
         <div className="categories">
           <CategoryButton icon={Trophy} name="Championships" onClick={() => setSelectedCategory('Championships')} />
@@ -354,24 +399,11 @@ const Sidebar = ({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers }
         )}
         <div className="achievements">
           <h3>Achievements - {selectedCategory}</h3>
-          {selectedPlayer && selectedPlayer.Achievements ? (
-            filterAchievements(selectedPlayer.Achievements, selectedCategory, searchTerm).map(({ name, value, isInCriteria }) => (
-              <Achievement 
-                key={name} 
-                name={name} 
-                value={value} 
-                onToggle={handleAchievementToggle}
-                onValueChange={handleAchievementValueChange}
-                isInCriteria={isInCriteria}
-              />
-            ))
-          ) : (
-            <p className="no-achievements">No achievements found for this player.</p>
-          )}
+          {memoizedAchievements || <p className="no-achievements">No achievements found for this player.</p>}
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default Sidebar;
