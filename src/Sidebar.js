@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X, Award, Star, CircleDollarSign, Info } from 'lucide-react';
+import { Trophy, CheckSquare, Square, MoreHorizontal, Edit2, Save, X, Award, Star, CircleDollarSign, CheckCircle } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 
 const CategoryButton = React.memo(({ icon: Icon, name, onClick }) => (
@@ -9,43 +9,34 @@ const CategoryButton = React.memo(({ icon: Icon, name, onClick }) => (
   </button>
 ));
 
-const Achievement = React.memo(({ name, value, onToggle, onValueChange, isInCriteria, isNewPlayer }) => {
+const Achievement = React.memo(({ name, originalName, value, onToggle, onValueChange, isUserPlayer, isCompleted }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const isEditable = isNewPlayer || isInCriteria;
 
   useEffect(() => {
-    setIsCompleted(typeof value === 'boolean' ? value : value > 0);
     setEditValue(value.toString());
   }, [value]);
 
   const handleSave = useCallback(() => {
-    if (!isEditable) return;
     const newValue = editValue === '' ? 0 : parseInt(editValue, 10);
     if (isNaN(newValue)) {
       toast.error('Please enter a valid number');
       return;
     }
-    onValueChange(name, newValue);
+    onValueChange(originalName, newValue);
     setIsEditing(false);
-    toast.success('Achievement updated successfully');
-  }, [isEditable, editValue, name, onValueChange]);
+  }, [editValue, originalName, onValueChange]);
 
   const handleToggle = useCallback(() => {
-    if (!isEditable) return;
-    onToggle(name);
-    setIsCompleted(!isCompleted);
-  }, [isEditable, name, onToggle, isCompleted]);
+    onToggle(originalName);
+  }, [originalName, onToggle]);
 
   const handleInputChange = useCallback((e) => {
-    if (!isEditable) return;
     const inputValue = e.target.value;
     if (inputValue === '' || /^\d+$/.test(inputValue)) {
       setEditValue(inputValue);
     }
-  }, [isEditable]);
+  }, []);
 
   const handleKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -54,14 +45,14 @@ const Achievement = React.memo(({ name, value, onToggle, onValueChange, isInCrit
   }, [handleSave]);
 
   const startEditing = useCallback(() => {
-    if (isEditable && typeof value !== 'boolean') {
+    if (typeof value !== 'boolean' && isUserPlayer) {
       setIsEditing(true);
     }
-  }, [isEditable, value]);
+  }, [value, isUserPlayer]);
 
   return (
-    <div className={`achievement ${isCompleted ? 'completed' : ''} ${isEditable ? 'criteria-based' : 'starting-point'}`}>
-      {isEditable ? (
+    <div className={`achievement ${isCompleted ? 'completed' : ''} ${isUserPlayer ? 'user-player' : 'real-player'}`}>
+      {isUserPlayer ? (
         typeof value === 'boolean' ? (
           <button onClick={handleToggle} className="achievement-toggle">
             {value ? <CheckSquare size={24} /> : <Square size={24} />}
@@ -83,38 +74,39 @@ const Achievement = React.memo(({ name, value, onToggle, onValueChange, isInCrit
           </>
         )
       ) : (
-        <span className="trophy-emoji" style={{ fontSize: '24px', width: '24px', height: '24px', display: 'inline-block', textAlign: 'center' }}>🏆</span>
+        <span className="trophy-emoji">🏆</span>
       )}
       <span className="achievement-name">{name}</span>
-      {!isEditable && <Info size={24} className="starting-point-icon" title="Starting point (non-editable)" />}
-      {isEditable && typeof value !== 'boolean' && !isEditing && (
-        <Edit2 size={24} onClick={startEditing} className="achievement-action" />
-      )}
-      {isEditing && (
-        <Save size={24} onClick={handleSave} className="achievement-action" />
+      {isUserPlayer && typeof value !== 'boolean' && (
+        isEditing ? (
+          <Save size={24} onClick={handleSave} className="achievement-action" />
+        ) : (
+          <Edit2 size={24} onClick={startEditing} className="achievement-action" />
+        )
       )}
     </div>
   );
-}, (prevProps, nextProps) => {
-  return prevProps.name === nextProps.name &&
-         prevProps.value === nextProps.value &&
-         prevProps.isInCriteria === nextProps.isInCriteria &&
-         prevProps.isNewPlayer === nextProps.isNewPlayer;
 });
 
 const achievementCategories = {
-  Championships: ['Championship', 'Finals'],
+  Completed: [],
+  Championships: ['Championship', 'Finals', 'champion'],
   'NBA Awards': ['MVP', 'DPOY', 'All-Star', 'All-NBA', 'All-Defensive'],
   'Rookie Achievements': ['Rookie', 'rookie'],
   Misc: [],
 };
 
-const categorizeAchievement = (achievementName) => {
+const categorizeAchievement = (achievementName, achievementValue, isCompleted) => {
+  if (isCompleted) {
+    return 'Completed';
+  }
+
   for (const [category, keywords] of Object.entries(achievementCategories)) {
-    if (keywords.some(keyword => achievementName.includes(keyword))) {
+    if (keywords.some(keyword => achievementName.toLowerCase().includes(keyword.toLowerCase()))) {
       return category;
     }
   }
+  
   return 'Misc';
 };
 
@@ -127,8 +119,34 @@ const determineTier = (points) => {
   return "Got Next Tier";
 };
 
-const sanitizeKey = (key) => {
-  return key.replace(/[.#$/[\]]/g, '_');
+const formatAchievementName = (name) => {
+  name = name.replace(/_/g, ' ').trim();
+  name = name.replace(/(\d+)(st|nd|rd|th)/gi, (match, p1, p2) => `${p1}${p2.toLowerCase()}`);
+  let words = name.split(' ');
+  words = words.map(word => {
+    const lowerWord = word.toLowerCase();
+    if (['mvp', 'dpoy', 'nba', 'fg', 'fgm', 'ovr', '3pm'].includes(lowerWord)) {
+      return word.toUpperCase();
+    }
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  });
+  name = words.join(' ');
+  name = name
+    .replace(/(\d+)([A-Z])/g, '$1 $2')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/ And /g, ' and ')
+    .replace(/ In /g, ' in ')
+    .replace(/ With /g, ' with ')
+    .replace(/ As /g, ' as ')
+    .replace(/ On /g, ' on ')
+    .replace(/ For /g, ' for ')
+    .replace(/ To /g, ' to ')
+    .replace(/ The /g, ' the ')
+    .replace(/ Of /g, ' of ')
+    .replace(/ A /g, ' a ')
+    .replace(/ From /g, ' from ')
+    .trim();
+  return name;
 };
 
 const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, allPlayers, criteria, isDemoMode }) => {
@@ -140,33 +158,48 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
   const [playerRank, setPlayerRank] = useState(selectedPlayer?.rank || 0);
   const [playerTier, setPlayerTier] = useState(selectedPlayer?.Tier || "Got Next Tier");
   const [searchTerm, setSearchTerm] = useState('');
-  const [demoAchievements, setDemoAchievements] = useState({});
+  const [localPlayerData, setLocalPlayerData] = useState(null);
 
-  useEffect(() => {
-    if (isDemoMode && selectedPlayer) {
-      setDemoAchievements(selectedPlayer.Achievements);
-    }
-  }, [isDemoMode, selectedPlayer]);
-  
   useEffect(() => {
     if (selectedPlayer) {
       setGoatPoints(selectedPlayer["Total GOAT Points"] || 0);
       setGoatPointsInput(selectedPlayer["Total GOAT Points"]?.toString() || '');
       setPlayerRank(selectedPlayer.rank || 0);
       setPlayerTier(determineTier(selectedPlayer["Total GOAT Points"]));
+      setLocalPlayerData(isDemoMode ? { ...selectedPlayer } : null);
     }
-  }, [selectedPlayer]);
+  }, [selectedPlayer, isDemoMode]);
 
-  const isAllAchievementsInCriteria = useCallback((achievements) => {
-    if (!achievements || typeof achievements !== 'object' || !criteria || !criteria.Achievements) return false;
-    return Object.keys(achievements).every(name => criteria.Achievements.hasOwnProperty(sanitizeKey(name)));
+  const isUserPlayer = useCallback((player) => {
+    if (!player || !criteria) return false;
+    const playerAchievementsKey = Object.keys(player).find(key => key.toLowerCase() === 'achievements');
+    const criteriaAchievementsKey = Object.keys(criteria).find(key => key.toLowerCase() === 'achievements');
+    if (!playerAchievementsKey || !criteriaAchievementsKey) return false;
+    const playerAchievements = player[playerAchievementsKey];
+    const criteriaAchievements = criteria[criteriaAchievementsKey];
+    if (!playerAchievements || !criteriaAchievements) return false;
+    const playerKeys = Object.keys(playerAchievements);
+    const criteriaKeys = Object.keys(criteriaAchievements);
+    return playerKeys.length === criteriaKeys.length && playerKeys.every(key => criteriaKeys.includes(key));
   }, [criteria]);
 
+  const memoizedIsUserPlayer = useMemo(() => isUserPlayer(selectedPlayer), [isUserPlayer, selectedPlayer]);
+
+  const getPlayerAchievements = useCallback((player) => {
+    const achievementsKey = Object.keys(player).find(key => key.toLowerCase() === 'achievements');
+    return player[achievementsKey] || {};
+  }, []);
+
   const calculateGoatPoints = useCallback((achievements) => {
-    if (!criteria || !criteria.Achievements) return 0;
+    if (!criteria) return 0;
+    
+    const criteriaAchievementsKey = Object.keys(criteria).find(key => key.toLowerCase() === 'achievements');
+    if (!criteriaAchievementsKey) return 0;
+  
+    const criteriaAchievements = criteria[criteriaAchievementsKey];
+  
     return Object.entries(achievements).reduce((total, [name, value]) => {
-      const sanitizedName = sanitizeKey(name);
-      const criteriaPoints = criteria.Achievements[sanitizedName] || 0;
+      const criteriaPoints = criteriaAchievements[name] || 0;
       if (typeof value === 'boolean' && value) {
         return total + criteriaPoints;
       } else if (typeof value === 'number') {
@@ -187,6 +220,14 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
     return { ...updatedPlayer, rank: newRank, Tier: newTier };
   }, [allPlayers]);
 
+  const updateLocalPlayerData = useCallback((updatedPlayer) => {
+    setLocalPlayerData(updatedPlayer);
+    setGoatPoints(updatedPlayer["Total GOAT Points"]);
+    setPlayerRank(updatedPlayer.rank);
+    setPlayerTier(determineTier(updatedPlayer["Total GOAT Points"]));
+    onUpdatePlayer(updatedPlayer);  // Notify parent component of the update
+  }, [onUpdatePlayer]);
+
   const handleGoatPointsUpdate = useCallback(() => {
     const newGoatPoints = goatPointsInput === '' ? 0 : parseInt(goatPointsInput, 10);
     if (isNaN(newGoatPoints)) {
@@ -194,21 +235,18 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
       return;
     }
     const updatedPlayer = updatePlayerRankAndTier({
-      ...selectedPlayer,
+      ...(isDemoMode ? localPlayerData : selectedPlayer),
       "Total GOAT Points": newGoatPoints
     });
     
     if (isDemoMode) {
-      setGoatPoints(newGoatPoints);
-      setPlayerRank(updatedPlayer.rank);
-      setPlayerTier(updatedPlayer.Tier);
+      updateLocalPlayerData(updatedPlayer);
     } else {
       onUpdatePlayer(updatedPlayer);
     }
-    
     setEditingGoatPoints(false);
-    toast.success('GOAT Points updated successfully');
-  }, [goatPointsInput, selectedPlayer, updatePlayerRankAndTier, onUpdatePlayer, isDemoMode]);
+    toast.success(`GOAT Points updated successfully${isDemoMode ? ' in Demo Mode' : ''}`);
+  }, [goatPointsInput, selectedPlayer, localPlayerData, updatePlayerRankAndTier, onUpdatePlayer, isDemoMode, updateLocalPlayerData]);
 
   const handleGoatPointsKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -228,77 +266,68 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
   }, []);
 
   const handleAchievementToggle = useCallback(async (achievementName) => {
-    const sanitizedName = sanitizeKey(achievementName);
-    if (!criteria || !criteria.Achievements || !criteria.Achievements.hasOwnProperty(sanitizedName)) {
-      toast.error('This achievement cannot be toggled');
+    if (!memoizedIsUserPlayer) {
+      toast.error('This achievement cannot be toggled for real players');
       return;
     }
-    
-    const updatedAchievements = isDemoMode
-      ? {
-          ...demoAchievements,
-          [achievementName]: !demoAchievements[achievementName]
-        }
-      : {
-          ...selectedPlayer.Achievements,
-          [achievementName]: !selectedPlayer.Achievements[achievementName]
-        };
-  
+    const playerToUpdate = isDemoMode ? localPlayerData : selectedPlayer;
+    const playerAchievements = getPlayerAchievements(playerToUpdate);
+    const updatedAchievements = {
+      ...playerAchievements,
+      [achievementName]: !playerAchievements[achievementName]
+    };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
     const updatedPlayer = updatePlayerRankAndTier({
-      ...selectedPlayer,
+      ...playerToUpdate,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-  
+    
     if (isDemoMode) {
-      setDemoAchievements(updatedAchievements);
+      updateLocalPlayerData(updatedPlayer);
+      toast.success('Achievement updated successfully in Demo Mode');
     } else {
       try {
         await onUpdatePlayer(updatedPlayer);
+        toast.success('Achievement updated successfully');
       } catch (error) {
         console.error('Error updating achievement:', error);
         toast.error('Failed to update achievement');
       }
     }
-  }, [isDemoMode, criteria, selectedPlayer, demoAchievements, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
-  
+  }, [memoizedIsUserPlayer, selectedPlayer, localPlayerData, getPlayerAchievements, calculateGoatPoints, updatePlayerRankAndTier, isDemoMode, updateLocalPlayerData, onUpdatePlayer]);
 
   const handleAchievementValueChange = useCallback(async (achievementName, newValue) => {
-    const sanitizedName = sanitizeKey(achievementName);
-    if (!criteria || !criteria.Achievements || !criteria.Achievements.hasOwnProperty(sanitizedName)) {
-      toast.error('This achievement cannot be updated');
+    if (!memoizedIsUserPlayer) {
+      toast.error('This achievement cannot be updated for real players');
       return;
     }
-  
-    const updatedAchievements = isDemoMode
-      ? {
-          ...demoAchievements,
-          [achievementName]: newValue
-        }
-      : {
-          ...selectedPlayer.Achievements,
-          [achievementName]: newValue
-        };
-  
+    const playerToUpdate = isDemoMode ? localPlayerData : selectedPlayer;
+    const playerAchievements = getPlayerAchievements(playerToUpdate);
+    const updatedAchievements = {
+      ...playerAchievements,
+      [achievementName]: newValue
+    };
     const newGoatPoints = calculateGoatPoints(updatedAchievements);
     const updatedPlayer = updatePlayerRankAndTier({
-      ...selectedPlayer,
+      ...playerToUpdate,
       Achievements: updatedAchievements,
       "Total GOAT Points": newGoatPoints
     });
-  
+    
     if (isDemoMode) {
-      setDemoAchievements(updatedAchievements);
+      updateLocalPlayerData(updatedPlayer);
+      toast.success('Achievement value updated successfully in Demo Mode');
     } else {
       try {
         await onUpdatePlayer(updatedPlayer);
+        toast.success('Achievement value updated successfully');
       } catch (error) {
         console.error('Error updating achievement value:', error);
         toast.error('Failed to update achievement value');
       }
     }
-  }, [isDemoMode, criteria, selectedPlayer, demoAchievements, calculateGoatPoints, onUpdatePlayer, updatePlayerRankAndTier]);
+  }, [memoizedIsUserPlayer, selectedPlayer, localPlayerData, getPlayerAchievements, calculateGoatPoints, updatePlayerRankAndTier, isDemoMode, updateLocalPlayerData, onUpdatePlayer]);
 
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
@@ -306,71 +335,87 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
 
   const memoizedFilterAchievements = useCallback((achievements, category, searchTerm) => {
     if (!achievements || typeof achievements !== 'object') {
-      console.error('Invalid achievements data:', achievements);
       return [];
     }
-  
+
     let filteredAchievements = Object.entries(achievements);
-    
+
+    filteredAchievements = filteredAchievements.map(([name, value]) => {
+      const isCompleted = typeof value === 'boolean' ? value : (typeof value === 'number' && value > 0);
+      return { 
+        name: formatAchievementName(name), 
+        originalName: name, 
+        value, 
+        isCompleted 
+      };
+    });
+
     if (category !== 'All') {
-      filteredAchievements = filteredAchievements.filter(([name]) => categorizeAchievement(name) === category);
+      filteredAchievements = filteredAchievements.filter(({ originalName, value, isCompleted }) => 
+        categorizeAchievement(originalName, value, isCompleted) === category
+      );
     }
-    
+
     if (searchTerm) {
       const lowerSearchTerm = searchTerm.toLowerCase();
-      filteredAchievements = filteredAchievements.filter(([name]) => 
+      filteredAchievements = filteredAchievements.filter(({ name }) => 
         name.toLowerCase().includes(lowerSearchTerm)
       );
     }
-    
-    const allInCriteria = isAllAchievementsInCriteria(achievements);
-    
-    return filteredAchievements.map(([name, value]) => ({
-      name,
-      value,
-      isInCriteria: allInCriteria || (criteria && criteria.Achievements && criteria.Achievements.hasOwnProperty(sanitizeKey(name)))
-    }));
-  }, [isAllAchievementsInCriteria, criteria]);
+
+    return filteredAchievements;
+  }, []);
 
   const memoizedAchievements = useMemo(() => {
-    if (!selectedPlayer) {
+    const playerToDisplay = isDemoMode ? localPlayerData : selectedPlayer;
+    if (!playerToDisplay) {
       return null;
     }
-    const achievements = isDemoMode ? demoAchievements : selectedPlayer.Achievements;
-    const filteredAchievements = memoizedFilterAchievements(achievements, selectedCategory, searchTerm);
+
+    const playerAchievements = getPlayerAchievements(playerToDisplay);
+    if (!playerAchievements) {
+      return null;
+    }
+
+    const filteredAchievements = memoizedFilterAchievements(playerAchievements, selectedCategory, searchTerm);
+
     if (!Array.isArray(filteredAchievements)) {
-      console.error('Filtered achievements is not an array:', filteredAchievements);
       return null;
     }
-    const isNewPlayer = selectedPlayer["Total GOAT Points"] === 0;
-    return filteredAchievements.map(({ name, value, isInCriteria }) => (
+
+    return filteredAchievements.map(({ name, originalName, value, isCompleted }) => (
       <Achievement 
-        key={`${name}-${value}`}
+        key={originalName}
         name={name} 
+        originalName={originalName}
         value={value} 
         onToggle={handleAchievementToggle}
         onValueChange={handleAchievementValueChange}
-        isInCriteria={isInCriteria}
-        isNewPlayer={isNewPlayer}
+        isUserPlayer={memoizedIsUserPlayer}
+        isCompleted={isCompleted}
       />
     ));
-  }, [selectedPlayer, selectedCategory, searchTerm, memoizedFilterAchievements, handleAchievementToggle, handleAchievementValueChange, isDemoMode, demoAchievements]);
+  }, [isDemoMode, localPlayerData, selectedPlayer, getPlayerAchievements, memoizedFilterAchievements, selectedCategory, searchTerm, handleAchievementToggle, handleAchievementValueChange, memoizedIsUserPlayer]);
 
-  const displayTier = playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier;
+  const playerToDisplay = isDemoMode ? localPlayerData : selectedPlayer;
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+    <div className={`sidebar ${isOpen ? 'open' : ''} ${isDemoMode ? 'demo-mode' : ''}`}>
       <Toaster position="top-right" />
       <button className="close-btn" onClick={onClose}><X size={24} /></button>
       <div className="sidebar-content">
+        <div className="sidebar-header">
+          <h2 className="sidebar-title">Player Details</h2>
+          {isDemoMode && <span className="demo-mode-indicator">Demo Mode</span>}
+        </div>
         <div className="player-header">
           <div className="player-rank">#{playerRank}</div>
-          <h2 className="sidebar-player-name">{selectedPlayer ? selectedPlayer["Player Name"] : "Player Name"}</h2>
-          <div className="player-tier">{displayTier}</div>
+          <h2 className="sidebar-player-name">{playerToDisplay ? playerToDisplay["Player Name"] : "Player Name"}</h2>
+          <div className="player-tier">{playerTier === "Got Next Tier" ? "NXT ⬆️" : playerTier}</div>
         </div>
-        {selectedPlayer && (
+        {playerToDisplay && (
           <div className="goat-points-container">
-            <h2>G.O.A.T Points</h2>
+            <h2>G.O.A.T Points {isDemoMode && <span className="demo-mode-indicator">(Demo)</span>}</h2>
             <div className="goat-points">
               {editingGoatPoints ? (
                 <>
@@ -408,6 +453,7 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
           <CategoryButton icon={Trophy} name="Championships" onClick={() => setSelectedCategory('Championships')} />
           <CategoryButton icon={Award} name="NBA Awards" onClick={() => setSelectedCategory('NBA Awards')} />
           <CategoryButton icon={Star} name="Rookie Achievements" onClick={() => setSelectedCategory('Rookie Achievements')} />
+          <CategoryButton icon={CheckCircle} name="Completed" onClick={() => setSelectedCategory('Completed')} />
           <CategoryButton icon={CircleDollarSign} name="Misc" onClick={() => setSelectedCategory('Misc')} />
           <button className="more-categories" onClick={() => setIsModalOpen(true)}><MoreHorizontal size={24} /></button>
         </div>
@@ -434,7 +480,7 @@ const Sidebar = React.memo(({ isOpen, selectedPlayer, onClose, onUpdatePlayer, a
           </div>
         )}
         <div className="achievements">
-          <h3>Achievements - {selectedCategory}</h3>
+          <h3>Achievements - {selectedCategory} {isDemoMode && <span className="demo-mode-indicator">(Demo)</span>}</h3>
           {memoizedAchievements || <p className="no-achievements">No achievements found for this player.</p>}
         </div>
       </div>

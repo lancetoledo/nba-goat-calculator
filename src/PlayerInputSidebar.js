@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 
-const PlayerInputSidebar = ({ isOpen, onClose, onAddPlayer, players, criteria }) => {
+const PlayerInputSidebar = ({ isOpen, onClose, onAddPlayer, players, criteria, isDemoMode }) => {
   const [playerName, setPlayerName] = useState('');
   const [playerImage, setPlayerImage] = useState('');
 
@@ -28,10 +28,10 @@ const PlayerInputSidebar = ({ isOpen, onClose, onAddPlayer, players, criteria })
       await onAddPlayer(newPlayer);
       setPlayerName('');
       setPlayerImage('');
-      toast.success('Player added successfully');
+      toast.success(`Player added successfully${isDemoMode ? ' in Demo Mode' : ''}`);
     } catch (error) {
       console.error('Error adding player:', error);
-      toast.error('Failed to add player');
+      toast.error(`Failed to add player${isDemoMode ? ' in Demo Mode' : ''}`);
     }
   };
 
@@ -40,7 +40,7 @@ const PlayerInputSidebar = ({ isOpen, onClose, onAddPlayer, players, criteria })
       <Toaster position="top-right" />
       <button className="close-btn" onClick={onClose}><X size={24} /></button>
       <div className="sidebar-content">
-        <h2>Add New Player</h2>
+        <h2>Add New Player {isDemoMode && <span className="demo-mode-indicator">(Demo Mode)</span>}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="playerName">Player Name</label>
@@ -64,7 +64,7 @@ const PlayerInputSidebar = ({ isOpen, onClose, onAddPlayer, players, criteria })
           </div>
           <button type="submit" className="submit-btn">
             <Plus size={18} />
-            Add Player
+            Add Player {isDemoMode && '(Demo)'}
           </button>
         </form>
       </div>

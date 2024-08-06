@@ -20,6 +20,64 @@ body, html {
   overflow-x: hidden;
 }
 
+/* Demo Mode Styling */
+
+.demo-mode-indicator {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #2a3b6e;
+}
+
+.sidebar-title {
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.demo-toggle-btn {
+  display: flex;
+  align-items: center;
+  background-color: #1a2b5e;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.demo-toggle-btn:hover {
+  background-color: #2a3b6e;
+}
+
+.demo-toggle-btn span {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.demo-mode .sidebar-content {
+  border: 2px solid #ff6b6b;
+}
+
+.demo-mode .achievement,
+.demo-mode .goat-points-container {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
 .demo-mode-toggle {
   position: fixed;
   top: 20px;

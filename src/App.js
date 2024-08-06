@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { collection, query, orderBy, onSnapshot, doc, setDoc, addDoc } from 'firebase/firestore';
 import { ref, onValue } from 'firebase/database';
 import { db, rtdb } from './firebase';
@@ -7,6 +7,7 @@ import Sidebar from './Sidebar';
 import PlayerInputSidebar from './PlayerInputSidebar';
 import './App.css';
 import { ToggleLeft, ToggleRight } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast'; // Add this import
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -26,19 +27,12 @@ function App() {
         rank: index + 1
       }));
       
-      setPlayers(prevPlayers => {
-        if (JSON.stringify(playersData) !== JSON.stringify(prevPlayers)) {
-          return playersData;
-        }
-        return prevPlayers;
-      });
+      setPlayers(playersData);
       
       setSelectedPlayer(prevSelected => {
         if (prevSelected) {
           const updatedSelectedPlayer = playersData.find(p => p.id === prevSelected.id);
-          if (updatedSelectedPlayer && JSON.stringify(updatedSelectedPlayer) !== JSON.stringify(prevSelected)) {
-            return updatedSelectedPlayer;
-          }
+          return updatedSelectedPlayer || null;
         }
         return prevSelected;
       });
@@ -47,17 +41,11 @@ function App() {
     const criteriaRef = ref(rtdb, 'criteria');
     const unsubscribeCriteria = onValue(criteriaRef, (snapshot) => {
       if (snapshot.exists()) {
-        const newCriteria = snapshot.val();
-        setCriteria(prevCriteria => {
-          if (JSON.stringify(newCriteria) !== JSON.stringify(prevCriteria)) {
-            return newCriteria;
-          }
-          return prevCriteria;
-        });
+        setCriteria(snapshot.val());
       } else {
         console.log("No criteria data available");
       }
-    }, { onlyOnce: true });
+    });
     
     return () => {
       unsubscribePlayers();
@@ -115,15 +103,45 @@ function App() {
     setIsPlayerInputSidebarOpen(false);
   }, []);
 
-  const toggleDemoMode = useCallback(() => {
-    setIsDemoMode(prev => !prev);
-  }, []);
+  const prevModeRef = useRef(false);
 
+  const toggleDemoMode = useCallback(() => {
+    setIsDemoMode(prev => {
+      const newMode = !prev;
+      if (newMode !== prevModeRef.current) {
+        prevModeRef.current = newMode;
+        if (newMode) {
+          toast.success('Demo Mode activated', {
+            icon: '🎮',
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          });
+        } else {
+          toast.success('Real Mode activated', {
+            icon: '🏀',
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          });
+        }
+      }
+      return newMode;
+    });
+    // Reset selected player when toggling demo mode
+    setSelectedPlayer(null);
+    setIsSidebarOpen(false);
+  }, []);
+  
   const memoizedPlayers = useMemo(() => isDemoMode ? demoPlayers : players, [isDemoMode, demoPlayers, players]);
-  const memoizedCriteria = useMemo(() => criteria, [criteria]);
 
   return (
     <div className={`App ${isSidebarOpen ? 'sidebar-open' : ''} ${isPlayerInputSidebarOpen ? 'player-input-sidebar-open' : ''}`}>
+      <Toaster position="top-center" /> {/* Add this line */}
       <div className="demo-mode-toggle">
         <button onClick={toggleDemoMode} className="demo-toggle-btn">
           {isDemoMode ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
@@ -139,21 +157,23 @@ function App() {
         selectedPlayer={selectedPlayer}
         players={memoizedPlayers}
       />
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        selectedPlayer={selectedPlayer} 
-        onClose={toggleSidebar}
-        onUpdatePlayer={updatePlayer}
-        allPlayers={memoizedPlayers}
-        criteria={memoizedCriteria}
-        isDemoMode={isDemoMode}
-      />
+      {criteria && (
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          selectedPlayer={selectedPlayer} 
+          onClose={toggleSidebar}
+          onUpdatePlayer={updatePlayer}
+          allPlayers={memoizedPlayers}
+          criteria={criteria}
+          isDemoMode={isDemoMode}
+        />
+      )}
       <PlayerInputSidebar
         isOpen={isPlayerInputSidebarOpen}
         onClose={togglePlayerInputSidebar}
         onAddPlayer={addPlayer}
         players={memoizedPlayers}
-        criteria={memoizedCriteria}
+        criteria={criteria}
         isDemoMode={isDemoMode}
       />
     </div>
