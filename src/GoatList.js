@@ -69,12 +69,6 @@ const GoatList = ({ isSidebarOpen, isPlayerInputSidebarOpen, toggleSidebar, togg
     return tiersObj;
   }, [rankedAndTieredPlayers]);
 
-  const handlePlayerClick = (player) => {
-    onPlayerClick(player);
-    if (!isSidebarOpen) {
-      toggleSidebar();
-    }
-  };
 
   return (
     <div className="goat-list-container">
