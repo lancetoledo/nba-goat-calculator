@@ -7,8 +7,9 @@ import Sidebar from './Sidebar';
 import PlayerInputSidebar from './PlayerInputSidebar';
 import './App.css';
 import { ToggleLeft, ToggleRight } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast'; // Add this import
+import toast, { Toaster } from 'react-hot-toast';
 
+console.log(useState)
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isPlayerInputSidebarOpen, setIsPlayerInputSidebarOpen] = useState(false);
